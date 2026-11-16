@@ -1,0 +1,13 @@
+.title {
+  font-size: 40px;
+}
+
+.form {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.links {
+  font-family: var(--sans);
+}
