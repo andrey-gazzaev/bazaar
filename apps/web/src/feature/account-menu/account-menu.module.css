@@ -1,0 +1,9 @@
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.name {
+  color: var(--muted);
+}
