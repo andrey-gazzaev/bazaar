@@ -54,16 +54,24 @@ describe('Checkout integration', () => {
     const user = userEvent.setup();
     renderShop(<Checkout productId="p1" />);
 
-    expect(await screen.findByText(/2\s400\s₽/)).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Оформление' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Адрес доставки' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Ваш заказ' })).toBeInTheDocument();
+    expect(screen.getByText('Товар')).toBeInTheDocument();
+    expect(screen.getByText('Доставка')).toBeInTheDocument();
+    expect(screen.getByText('Итого')).toBeInTheDocument();
+    expect(screen.getByText('0 ₽')).toBeInTheDocument();
+    expect(screen.getAllByText(/2\s400\s₽/)).toHaveLength(2);
 
-    await user.type(screen.getByPlaceholderText('Кому доставить'), 'Мария Иванова');
-    await user.type(screen.getByPlaceholderText('Телефон'), '+79990001122');
-    await user.type(screen.getByPlaceholderText('Адрес'), 'Казань, Баумана, 1');
-    await user.click(screen.getByRole('button', { name: 'Оформить заказ' }));
+    await user.type(screen.getByLabelText('Имя'), 'Мария Иванова');
+    await user.type(screen.getByLabelText('Телефон'), '+79990001122');
+    await user.selectOptions(screen.getByLabelText('Город'), 'Казань');
+    await user.type(screen.getByLabelText('Улица и дом'), 'Баумана, 1');
+    await user.click(screen.getByRole('button', { name: 'Подтвердить заказ' }));
 
     expect(orderApi.create).toHaveBeenCalledWith('p1', {
       recipientName: 'Мария Иванова',
-      phone: '+79990001122',
+      phone: '+7 (999) 000-11-22',
       address: 'Казань, Баумана, 1',
     });
     expect(await screen.findByText(/Заказ o1 оформлен/)).toBeInTheDocument();

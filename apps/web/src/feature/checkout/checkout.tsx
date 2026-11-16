@@ -8,6 +8,7 @@ import { useCreateOrder } from '@/queries';
 import { formatPrice } from '@/services';
 import { Page, Panel } from '@/ui';
 import { CheckoutForm } from './checkout-form';
+import styles from './checkout-form.module.css';
 
 /** Delivery details and a mock purchase of one listing. */
 export function Checkout({ productId }: { readonly productId: string }) {
@@ -53,19 +54,17 @@ export function Checkout({ productId }: { readonly productId: string }) {
   }
 
   return (
-    <Page>
-      <Panel>
-        <h1>Куда отправить</h1>
+    <Page className={styles.stack}>
+      <h1 className={styles.title}>Оформление</h1>
 
-        {order ? (
-          <div>
-            <p>Заказ {order.id} оформлен.</p>
-            <p className="muted">Сумма {formatPrice(order.price)}. Оплата в этой версии не списывает деньги.</p>
-          </div>
-        ) : (
-          <CheckoutForm checkout={checkout} pending={createOrder.isPending} onSubmit={onSubmit} />
-        )}
-      </Panel>
+      {order ? (
+        <Panel>
+          <p>Заказ {order.id} оформлен.</p>
+          <p className="muted">Сумма {formatPrice(order.price)}. Оплата в этой версии не списывает деньги.</p>
+        </Panel>
+      ) : (
+        <CheckoutForm checkout={checkout} pending={createOrder.isPending} onSubmit={onSubmit} />
+      )}
     </Page>
   );
 }

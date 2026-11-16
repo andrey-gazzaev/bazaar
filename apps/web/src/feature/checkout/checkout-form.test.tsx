@@ -21,17 +21,33 @@ describe('CheckoutForm', () => {
       />,
     );
 
-    expect(screen.getByText('Итог')).toBeInTheDocument();
-    expect(screen.getByText(/2\s400\s₽/)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Адрес доставки' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Ваш заказ' })).toBeInTheDocument();
+    expect(screen.getByLabelText('Имя')).toHaveValue('');
+    expect(screen.getByPlaceholderText('+7 (___) ___-__-__')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Укажите улицу и номер дома')).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Москва' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Санкт-Петербург' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Казань' })).toBeInTheDocument();
+    expect(screen.getByText('Продавец')).toBeInTheDocument();
+    expect(screen.getByText('Товар')).toBeInTheDocument();
+    expect(screen.getByText('Доставка')).toBeInTheDocument();
+    expect(screen.getByText('Итого')).toBeInTheDocument();
+    expect(screen.getByText('0 ₽')).toBeInTheDocument();
+    expect(screen.getAllByText(/2\s400\s₽/)).toHaveLength(2);
 
-    fireEvent.change(screen.getByPlaceholderText('Кому доставить'), { target: { value: 'Мария Иванова' } });
-    fireEvent.change(screen.getByPlaceholderText('Телефон'), { target: { value: '+79990001122' } });
-    fireEvent.change(screen.getByPlaceholderText('Адрес'), { target: { value: 'Казань, Баумана, 1' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Оформить заказ' }));
+    fireEvent.change(screen.getByLabelText('Имя'), { target: { value: 'Мария Иванова' } });
+    fireEvent.change(screen.getByLabelText('Телефон'), { target: { value: '+79990001122' } });
+    fireEvent.change(screen.getByLabelText('Город'), { target: { value: 'Казань' } });
+    fireEvent.change(screen.getByLabelText('Улица и дом'), { target: { value: '  Баумана, 1  ' } });
+
+    expect(screen.getByLabelText('Телефон')).toHaveValue('+7 (999) 000-11-22');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Подтвердить заказ' }));
 
     expect(onSubmit).toHaveBeenCalledWith({
       recipientName: 'Мария Иванова',
-      phone: '+79990001122',
+      phone: '+7 (999) 000-11-22',
       address: 'Казань, Баумана, 1',
     });
   });

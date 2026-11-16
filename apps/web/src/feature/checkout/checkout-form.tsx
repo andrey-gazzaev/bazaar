@@ -3,10 +3,51 @@
 import { useState, type FormEvent } from 'react';
 import type { Shipping } from '@/models';
 import type { CheckoutVm } from '@/view-models';
-import { Button, Media, TextField } from '@/ui';
+import { Panel, SelectField, TextField } from '@/ui';
+import { OrderSummary } from './order-summary';
 import styles from './checkout-form.module.css';
 
-/** Delivery form and the total for one listing. */
+const CITIES = ['Москва', 'Санкт-Петербург', 'Казань'] as const;
+
+function subscriberDigits(raw: string): string {
+  let digits = raw.replace(/\D/g, '');
+
+  if (digits.startsWith('7') || digits.startsWith('8')) {
+    digits = digits.slice(1);
+  }
+
+  return digits.slice(0, 10);
+}
+
+function maskPhone(raw: string): string {
+  const digits = subscriberDigits(raw);
+
+  if (digits.length === 0) return '';
+
+  const area = digits.slice(0, 3);
+  const prefix = digits.slice(3, 6);
+  const first = digits.slice(6, 8);
+  const second = digits.slice(8, 10);
+  let masked = `+7 (${area}`;
+
+  if (digits.length < 3) return masked;
+
+  masked += ')';
+
+  if (prefix.length === 0) return masked;
+
+  masked += ` ${prefix}`;
+
+  if (first.length === 0) return masked;
+
+  masked += `-${first}`;
+
+  if (second.length === 0) return masked;
+
+  return `${masked}-${second}`;
+}
+
+/** Address and order summary for one listing. */
 export function CheckoutForm({
   checkout,
   pending,
@@ -18,19 +59,22 @@ export function CheckoutForm({
 }) {
   const [recipientName, setRecipientName] = useState('');
   const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [street, setStreet] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   async function submit(event: FormEvent) {
     event.preventDefault();
+    const recipient = recipientName.trim();
+    const streetLine = street.trim();
     const shipping = {
-      recipientName: recipientName.trim(),
-      phone: phone.trim(),
-      address: address.trim(),
+      recipientName: recipient,
+      phone,
+      address: `${city}, ${streetLine}`,
     };
 
-    if (shipping.recipientName.length < 2 || shipping.phone.length < 5 || shipping.address.length < 5) {
-      setError('Укажите получателя, телефон и адрес');
+    if (recipient.length < 2 || subscriberDigits(phone).length !== 10 || city.length === 0 || streetLine.length < 5) {
+      setError('Укажите имя, телефон, город и улицу');
       return;
     }
 
@@ -44,46 +88,54 @@ export function CheckoutForm({
   }
 
   return (
-    <div className={styles.layout}>
-      <div className={styles.summary}>
-        <div className={styles.frame}>{checkout.image ? <Media src={checkout.image} alt="" /> : null}</div>
-        <h2>{checkout.productName}</h2>
-        <p className="muted">Итог</p>
-        <p className={styles.total}>{checkout.totalLabel}</p>
+    <form onSubmit={(event) => void submit(event)}>
+      <div className={styles.layout}>
+        <Panel className={styles.address}>
+          <h2 className={styles.heading}>Адрес доставки</h2>
+
+          <div className={styles.fields}>
+            <TextField
+              label="Имя"
+              value={recipientName}
+              onChange={(event) => setRecipientName(event.target.value)}
+              name="recipient"
+              autoComplete="name"
+            />
+
+            <TextField
+              label="Телефон"
+              value={phone}
+              onChange={(event) => setPhone(maskPhone(event.target.value))}
+              placeholder="+7 (___) ___-__-__"
+              name="phone"
+              inputMode="tel"
+              autoComplete="tel"
+            />
+
+            <SelectField label="Город" name="city" value={city} onChange={(event) => setCity(event.target.value)}>
+              <option value="" />
+              {CITIES.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </SelectField>
+
+            <TextField
+              label="Улица и дом"
+              value={street}
+              onChange={(event) => setStreet(event.target.value)}
+              placeholder="Укажите улицу и номер дома"
+              name="street"
+              autoComplete="street-address"
+            />
+          </div>
+
+          {error ? <p className="status">{error}</p> : null}
+        </Panel>
+
+        <OrderSummary checkout={checkout} pending={pending} />
       </div>
-
-      <form className={styles.form} onSubmit={(event) => void submit(event)}>
-        <label>
-          <span className="sr">Кому</span>
-          <TextField
-            value={recipientName}
-            onChange={(event) => setRecipientName(event.target.value)}
-            placeholder="Кому доставить"
-            name="recipient"
-          />
-        </label>
-
-        <label>
-          <span className="sr">Телефон</span>
-          <TextField value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="Телефон" name="phone" />
-        </label>
-
-        <label>
-          <span className="sr">Адрес</span>
-          <TextField
-            value={address}
-            onChange={(event) => setAddress(event.target.value)}
-            placeholder="Адрес"
-            name="address"
-          />
-        </label>
-
-        <Button type="submit" disabled={pending}>
-          {pending ? 'Оформляем…' : 'Оформить заказ'}
-        </Button>
-
-        {error ? <p className="status">{error}</p> : null}
-      </form>
-    </div>
+    </form>
   );
 }
