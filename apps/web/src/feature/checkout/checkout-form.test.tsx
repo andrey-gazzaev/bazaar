@@ -8,7 +8,14 @@ describe('CheckoutForm', () => {
 
     render(
       <CheckoutForm
-        checkout={{ productId: 'p1', productName: 'Льняная сумка', image: '', totalLabel: '2\u00a0400 ₽' }}
+        checkout={{
+          productId: 'p1',
+          productName: 'Льняная сумка',
+          image: '',
+          sellerName: 'Продавец',
+          totalLabel: '2\u00a0400 ₽',
+          deliveryLabel: '0 ₽',
+        }}
         pending={false}
         onSubmit={onSubmit}
       />,

@@ -8,6 +8,8 @@ export function mapCheckout(product: Product): CheckoutVm {
     productId: product.id,
     productName: product.name,
     image: product.images[0] ?? '',
+    sellerName: product.sellerName,
     totalLabel: formatPrice(product.price),
+    deliveryLabel: formatPrice(0),
   };
 }
