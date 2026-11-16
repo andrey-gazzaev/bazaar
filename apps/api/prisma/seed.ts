@@ -1,4 +1,4 @@
-import { PrismaClient, Role } from '@prisma/client';
+import { PrismaClient, ReviewStatus, Role } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -231,6 +231,8 @@ async function main(): Promise<void> {
         name: product.name,
         description: product.description,
         price: product.price,
+        stock: 5,
+        status: ReviewStatus.APPROVED,
         createdAt: new Date(Date.UTC(2026, 10, 16, 12, 0, products.length - index)),
         images: { create: [{ url: `/uploads/${filename}`, sort: 0 }] },
         tags: { create: product.tags.map((name) => ({ tagId: requiredTagId(tagIdByName, name) })) },

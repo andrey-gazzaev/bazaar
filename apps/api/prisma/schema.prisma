@@ -19,6 +19,13 @@ enum OrderStatus {
   PAID
 }
 
+/// Whether a listing is on sale. New cards wait until an admin approves them.
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 /// Account that can sign in.
 model User {
   id           String    @id @default(cuid())
@@ -28,6 +35,7 @@ model User {
   role         Role
   products     Product[]
   orders       Order[]
+  cartItems    CartItem[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 }
@@ -48,13 +56,32 @@ model Product {
   name        String
   description String
   price       Int
+  /// Units still for sale. Zero stays in the catalog and cannot be bought.
+  stock       Int            @default(5)
+  /// Review state. Rows already in the database stay approved.
+  status      ReviewStatus   @default(APPROVED)
   images      ProductImage[]
   tags        ProductTag[]
   orders      Order[]
+  cartItems   CartItem[]
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 
   @@index([createdAt])
+  @@index([status])
+}
+
+/// One line in a buyer's cart. The quantity does not reserve stock.
+model CartItem {
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int
+
+  @@unique([userId, productId])
+  @@index([userId])
 }
 
 /// Picture stored for a listing. url is a public path.
