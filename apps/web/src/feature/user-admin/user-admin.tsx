@@ -1,10 +1,11 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useSessionContext } from '@/context';
-import { buildUserRow } from '@/hooks';
+import { useUserRows } from '@/hooks';
+import { mapUserDraft } from '@/mappers';
 import type { UserDraft } from '@/models';
-import { useCreateUser, useDeleteUser, useUpdateUser, useUsers } from '@/queries';
+import { useCreateUser, useDeleteUser, useUpdateUser } from '@/queries';
 import { Page, Panel } from '@/ui';
 import styles from './user-admin.module.css';
 import { UserForm } from './user-form';
@@ -15,15 +16,13 @@ const blank: UserDraft = { name: '', email: '', password: '', role: 'CLIENT' };
 /** Admin list and editor for accounts. */
 export function UserAdmin() {
   const session = useSessionContext();
-  const users = useUsers();
+  const { rows, isLoading } = useUserRows();
   const createUser = useCreateUser();
   const updateUser = useUpdateUser();
   const deleteUser = useDeleteUser();
   const [draft, setDraft] = useState<UserDraft>(blank);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  const rows = useMemo(() => (users.data ?? []).map(buildUserRow), [users.data]);
 
   if (session.isLoading) return <Page><p className="muted">Загрузка…</p></Page>;
 
@@ -39,11 +38,11 @@ export function UserAdmin() {
   }
 
   function edit(id: string) {
-    const user = users.data?.find((item) => item.id === id);
-    if (!user) return;
+    const row = rows?.find((item) => item.id === id);
+    if (!row) return;
 
     setEditingId(id);
-    setDraft({ name: user.name, email: user.email, password: '', role: user.role });
+    setDraft(mapUserDraft(row));
     setError(null);
   }
 
@@ -110,8 +109,8 @@ export function UserAdmin() {
           {error ? <p className="status">{error}</p> : null}
         </Panel>
 
-        {users.isLoading ? <p className="muted">Загрузка…</p> : null}
-        {users.data ? <UserTable rows={rows} onEdit={edit} onDelete={(id) => void remove(id)} /> : null}
+        {isLoading ? <p className="muted">Загрузка…</p> : null}
+        {rows ? <UserTable rows={rows} onEdit={edit} onDelete={(id) => void remove(id)} /> : null}
       </div>
     </Page>
   );
