@@ -3,7 +3,7 @@ export type Order = {
   /** Order id. */
   readonly id: string;
 
-  /** Price in whole rubles at the moment of purchase. */
+  /** Amount charged for this line, in whole rubles. */
   readonly price: number;
 
   /** Listing that was bought. */
