@@ -1,26 +1,18 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useSessionContext } from '@/context';
-import { useSignOut } from '@/queries';
-import { Button, Icon, NavItem } from '@/ui';
+import { Icon, NavItem } from '@/ui';
 import styles from './account-menu.module.css';
 
 function catalogSelected(pathname: string): boolean {
   return pathname === '/' || pathname === '/products' || pathname.startsWith('/products/');
 }
 
-/** Who is signed in, and the links for that role. */
+/** Links for the signed-in role. Guests get sign-in and registration. */
 export function AccountMenu() {
   const session = useSessionContext();
-  const signOut = useSignOut();
-  const router = useRouter();
   const pathname = usePathname();
-
-  async function leave() {
-    await signOut.mutateAsync();
-    router.push('/');
-  }
 
   if (session.isLoading) return <span className="muted">…</span>;
 
@@ -49,14 +41,21 @@ export function AccountMenu() {
 
   const seller = session.user.role === 'SELLER';
   const admin = session.user.role === 'ADMIN';
+  const shopper = session.user.role !== 'ADMIN';
 
   return (
     <div className={styles.menu}>
       {catalog}
 
+      {shopper ? (
+        <NavItem href="/cart" selected={pathname === '/cart'}>
+          Корзина
+        </NavItem>
+      ) : null}
+
       {seller ? (
-        <NavItem href="/sell" selected={pathname === '/sell'} icon={<Icon name="tag" />}>
-          Продать
+        <NavItem href="/listings" selected={pathname === '/listings'} icon={<Icon name="tag" />}>
+          Мои объявления
         </NavItem>
       ) : null}
 
@@ -72,10 +71,11 @@ export function AccountMenu() {
         </NavItem>
       ) : null}
 
-      <span className={styles.name}>{session.user.name}</span>
-      <Button className={styles.leave} variant="ghost" onClick={() => void leave()}>
-        Выйти
-      </Button>
+      {admin ? (
+        <NavItem href="/admin/moderation" selected={pathname === '/admin/moderation'}>
+          Модерация
+        </NavItem>
+      ) : null}
     </div>
   );
 }

@@ -1,0 +1,30 @@
+.panel {
+  display: grid;
+  gap: 16px;
+}
+
+.panel h1 {
+  font-size: 32px;
+}
+
+.rows {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.rows div {
+  display: grid;
+  gap: 2px;
+}
+
+.rows dt {
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 13px;
+}
+
+.rows dd {
+  margin: 0;
+  font-family: var(--sans);
+}

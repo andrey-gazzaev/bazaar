@@ -4,6 +4,8 @@ export { Catalog } from './catalog/catalog';
 export { Listings } from './listings/listings';
 export { Moderation } from './moderation/moderation';
 export { ProductScreen } from './product-screen/product-screen';
+export { ProfileMenu } from './profile-menu/profile-menu';
+export { Settings } from './settings/settings';
 export { SignIn } from './sign-in/sign-in';
 export { SignUp } from './sign-up/sign-up';
 export { TagAdmin } from './tag-admin/tag-admin';
