@@ -1,0 +1,29 @@
+.layout {
+  display: grid;
+  gap: 22px;
+}
+
+.form {
+  display: grid;
+  gap: 12px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--sans);
+  font-size: 15px;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
