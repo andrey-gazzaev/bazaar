@@ -1,3 +1,4 @@
+import type { ReviewStatus } from './review-status';
 import type { Tag } from './tag';
 
 /** Listing a seller offers. */
@@ -13,6 +14,12 @@ export type Product = {
 
   /** Price in whole rubles. */
   readonly price: number;
+
+  /** Units still for sale. Zero means none can be bought. */
+  readonly stock: number;
+
+  /** Review state. Only an approved listing is public. */
+  readonly status: ReviewStatus;
 
   /** Account id of the seller. */
   readonly sellerId: string;

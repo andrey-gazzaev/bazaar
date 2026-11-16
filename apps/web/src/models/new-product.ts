@@ -9,6 +9,9 @@ export type NewProduct = {
   /** Price in whole rubles. */
   readonly price: number;
 
+  /** Units still for sale. */
+  readonly stock: number;
+
   /** Tag ids. Empty when the listing has no tags. */
   readonly tagIds: readonly string[];
 
