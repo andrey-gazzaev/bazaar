@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// What a person is allowed to do in the shop.
+enum Role {
+  ADMIN
+  SELLER
+  CLIENT
+}
+
+/// A mock purchase is stored as already paid.
+enum OrderStatus {
+  PAID
+}
+
+/// Account that can sign in.
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  role         Role
+  products     Product[]
+  orders       Order[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+/// Label an admin maintains and a seller can attach to a listing.
+model Tag {
+  id        String       @id @default(cuid())
+  name      String       @unique
+  products  ProductTag[]
+  createdAt DateTime     @default(now())
+}
+
+/// One listing owned by a seller.
+model Product {
+  id          String         @id @default(cuid())
+  sellerId    String
+  seller      User           @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  name        String
+  description String
+  price       Int
+  images      ProductImage[]
+  tags        ProductTag[]
+  orders      Order[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([createdAt])
+}
+
+/// Picture stored for a listing. url is a public path.
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  sort      Int
+}
+
+/// Link between a listing and a tag.
+model ProductTag {
+  productId String
+  tagId     String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([productId, tagId])
+}
+
+/// One mock purchase of a single listing.
+model Order {
+  id            String      @id @default(cuid())
+  productId     String
+  product       Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  buyerId       String
+  buyer         User        @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+  price         Int
+  recipientName String
+  phone         String
+  address       String
+  status        OrderStatus @default(PAID)
+  createdAt     DateTime    @default(now())
+
+  @@index([buyerId])
+}
