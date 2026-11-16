@@ -1,5 +1,5 @@
+import { Icon, Media } from '@/ui';
 import type { ProductCardVm } from '@/view-models';
-import { Media, Pill } from '@/ui';
 import styles from './catalog.module.css';
 
 /** One listing in the catalog. */
@@ -12,15 +12,12 @@ export function ProductCard({ card }: { readonly card: ProductCardVm }) {
         <h2 className={styles.title}>{card.name}</h2>
         <p className={styles.price}>{card.priceLabel}</p>
 
-        {card.tags.length > 0 ? (
-          <div className={styles.tags}>
-            {card.tags.map((tag) => (
-              <Pill key={tag}>{tag}</Pill>
-            ))}
-          </div>
-        ) : null}
-
-        <p className={styles.seller}>{card.sellerName}</p>
+        <p className={styles.seller}>
+          <span className={styles.shop}>
+            <Icon name="shop" />
+          </span>
+          {card.sellerName}
+        </p>
       </div>
     </a>
   );

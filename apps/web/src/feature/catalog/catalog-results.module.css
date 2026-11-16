@@ -1,0 +1,28 @@
+.panel {
+  display: grid;
+  gap: 16px;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.title {
+  font-size: 22px;
+}
+
+.count {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}

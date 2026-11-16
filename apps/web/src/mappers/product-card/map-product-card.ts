@@ -7,6 +7,7 @@ export function mapProductCard(product: Product): ProductCardVm {
   return {
     id: product.id,
     name: product.name,
+    price: product.price,
     priceLabel: formatPrice(product.price),
     image: product.images[0] ?? '',
     sellerName: product.sellerName,

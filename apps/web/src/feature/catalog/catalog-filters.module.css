@@ -1,0 +1,14 @@
+.panel {
+  display: grid;
+  gap: 16px;
+}
+
+.title {
+  font-size: 22px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

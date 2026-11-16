@@ -6,6 +6,9 @@ export type ProductCardVm = {
   /** Title. */
   readonly name: string;
 
+  /** Price in whole rubles. */
+  readonly price: number;
+
   /** Price label in rubles. */
   readonly priceLabel: string;
 

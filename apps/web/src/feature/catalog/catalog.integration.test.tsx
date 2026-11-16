@@ -38,7 +38,7 @@ describe('Catalog integration', () => {
     );
 
     expect(await screen.findByRole('link', { name: /Льняная сумка/ })).toBeInTheDocument();
-    expect(screen.getByText('Дом')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Дом' })).toBeInTheDocument();
     expect(productApi.list).toHaveBeenCalledOnce();
   });
 });
