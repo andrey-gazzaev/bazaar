@@ -1,0 +1,48 @@
+.gallery {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.frame {
+  padding: 12px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.picture {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+
+.thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.thumb {
+  display: block;
+  width: 80px;
+  height: 80px;
+  padding: 0;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.thumb[aria-pressed='true'] {
+  border-color: var(--accent);
+}
+
+.thumb:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
