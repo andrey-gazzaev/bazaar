@@ -1,21 +1,18 @@
 'use client';
 
-import { useMemo } from 'react';
-import { buildProductCard } from '@/hooks';
-import { useProducts } from '@/queries';
+import { useProductCards } from '@/hooks';
 import { Page } from '@/ui';
 import styles from './catalog.module.css';
 import { ProductCard } from './product-card';
 
 /** Grid of listings. */
 export function Catalog() {
-  const products = useProducts();
-  const cards = useMemo(() => (products.data ?? []).map(buildProductCard), [products.data]);
+  const { cards, isLoading, error } = useProductCards();
 
-  if (products.isLoading) return <Page><p className="muted">Загрузка…</p></Page>;
+  if (isLoading) return <Page><p className="muted">Загрузка…</p></Page>;
 
-  if (products.error) {
-    const message = products.error instanceof Error ? products.error.message : 'Не удалось загрузить товары';
+  if (error) {
+    const message = error instanceof Error ? error.message : 'Не удалось загрузить товары';
     return <Page><p className="status">{message}</p></Page>;
   }
 

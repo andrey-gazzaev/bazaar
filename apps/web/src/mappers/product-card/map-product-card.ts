@@ -3,7 +3,7 @@ import { formatPrice } from '@/services';
 import type { ProductCardVm } from '@/view-models';
 
 /** Card shape for one listing. */
-export function buildProductCard(product: Product): ProductCardVm {
+export function mapProductCard(product: Product): ProductCardVm {
   return {
     id: product.id,
     name: product.name,
