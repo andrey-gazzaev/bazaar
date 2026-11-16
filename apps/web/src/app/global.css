@@ -1,0 +1,83 @@
+:root {
+  color-scheme: light;
+  --bg: #f3ecdf;
+  --surface: #fffaf3;
+  --surface-2: #f6efe4;
+  --line: #e2d3c0;
+  --text: #241c14;
+  --muted: #74685b;
+  --accent: #b8431f;
+  --accent-ink: #fff8f3;
+  --danger: #9d2c2c;
+  --radius: 18px;
+  --radius-control: 12px;
+  --shadow: 0 18px 40px rgb(70 40 15 / 8%);
+  --page: min(1080px, calc(100% - 40px));
+  --font: 'Iowan Old Style', Palatino, 'Palatino Linotype', Georgia, serif;
+  --sans: 'Avenir Next', 'Segoe UI', sans-serif;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.45;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(900px 420px at 0% -10%, rgb(184 67 31 / 12%), transparent 55%),
+    var(--bg);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2 {
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.muted {
+  color: var(--muted);
+  margin: 0;
+  font-family: var(--sans);
+}
+
+.status {
+  color: var(--danger);
+  font-family: var(--sans);
+  font-size: 14px;
+  margin: 0;
+}
