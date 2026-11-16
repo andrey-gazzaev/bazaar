@@ -3,8 +3,8 @@
   align-items: center;
   border-radius: 999px;
   padding: 3px 8px;
-  background: var(--surface-2);
-  color: var(--muted);
+  background: var(--accent-soft);
+  color: var(--accent);
   font-family: var(--sans);
   font-size: 12px;
 }
