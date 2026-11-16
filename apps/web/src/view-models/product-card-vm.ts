@@ -1,0 +1,20 @@
+/** Listing as a catalog card. */
+export type ProductCardVm = {
+  /** Listing id. */
+  readonly id: string;
+
+  /** Title. */
+  readonly name: string;
+
+  /** Price label in rubles. */
+  readonly priceLabel: string;
+
+  /** Cover image path. Empty when the listing has no pictures. */
+  readonly image: string;
+
+  /** Seller name. */
+  readonly sellerName: string;
+
+  /** Tag labels. Empty when the listing has no tags. */
+  readonly tags: readonly string[];
+};
