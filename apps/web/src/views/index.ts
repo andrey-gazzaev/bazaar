@@ -1,8 +1,10 @@
+export { AdminModerationPage } from './admin-moderation-page/admin-moderation-page';
 export { AdminTagsPage } from './admin-tags-page/admin-tags-page';
 export { AdminUsersPage } from './admin-users-page/admin-users-page';
+export { CartPage } from './cart-page/cart-page';
 export { CatalogPage } from './catalog-page/catalog-page';
-export { CheckoutPage } from './checkout-page/checkout-page';
+export { ListingsPage } from './listings-page/listings-page';
 export { ProductPage } from './product-page/product-page';
-export { SellPage } from './sell-page/sell-page';
+export { SettingsPage } from './settings-page/settings-page';
 export { SignInPage } from './sign-in-page/sign-in-page';
 export { SignUpPage } from './sign-up-page/sign-up-page';
