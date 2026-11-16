@@ -1,0 +1,15 @@
+{
+  "name": "bazaar",
+  "private": true,
+  "packageManager": "pnpm@12.21.0",
+  "scripts": {
+    "dev": "pnpm --parallel --filter api --filter web dev",
+    "dev:api": "pnpm --filter api dev",
+    "dev:web": "pnpm --filter web dev",
+    "db:up": "docker compose up -d --wait",
+    "db:migrate": "pnpm --filter api exec prisma migrate deploy",
+    "db:seed": "pnpm --filter api exec prisma db seed",
+    "test": "pnpm --filter api test && pnpm --filter web test",
+    "typecheck": "pnpm --filter api typecheck && pnpm --filter web typecheck"
+  }
+}
