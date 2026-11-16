@@ -1,3 +1,6 @@
+export type { CatalogPage } from './catalog-page';
+export type { CatalogQuery } from './catalog-query';
+export type { CatalogSort } from './catalog-sort';
 export type { Credentials } from './credentials';
 export type { NewProduct } from './new-product';
 export type { Order } from './order';
