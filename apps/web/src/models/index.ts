@@ -1,3 +1,4 @@
+export type { CartLine } from './cart-line';
 export type { CatalogPage } from './catalog-page';
 export type { CatalogQuery } from './catalog-query';
 export type { CatalogSort } from './catalog-sort';
