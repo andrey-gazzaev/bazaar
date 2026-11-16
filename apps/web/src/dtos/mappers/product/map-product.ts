@@ -9,6 +9,8 @@ export function mapProduct(dto: ProductDto): Product {
     name: dto.name,
     description: dto.description,
     price: dto.price,
+    stock: dto.stock,
+    status: dto.status,
     sellerId: dto.sellerId,
     sellerName: dto.sellerName,
     images: dto.images,

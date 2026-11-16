@@ -7,6 +7,8 @@ export const productSchema = z.object({
   name: z.string(),
   description: z.string(),
   price: z.number(),
+  stock: z.number(),
+  status: z.enum(['PENDING', 'APPROVED', 'REJECTED']),
   sellerId: z.string(),
   sellerName: z.string(),
   images: z.array(z.string()),

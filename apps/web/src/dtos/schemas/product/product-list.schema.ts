@@ -1,10 +1,14 @@
 import { z } from 'zod';
 import { productSchema } from './product.schema';
 
-/** Catalog payload. */
-export const productListSchema = z.object({
+/** One page of the public catalog. */
+export const catalogPageSchema = z.object({
   products: z.array(productSchema),
+  page: z.number(),
+  pageCount: z.number(),
+  total: z.number(),
+  ceiling: z.number(),
 });
 
-/** Catalog payload. */
-export type ProductListDto = z.infer<typeof productListSchema>;
+/** One page of the public catalog. */
+export type CatalogPageDto = z.infer<typeof catalogPageSchema>;
