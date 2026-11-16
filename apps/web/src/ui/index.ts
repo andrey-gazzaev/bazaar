@@ -11,4 +11,5 @@ export { Page } from './page/page';
 export { Panel } from './panel/panel';
 export { Pill } from './pill/pill';
 export { Shell } from './shell/shell';
+export { Sidebar } from './sidebar/sidebar';
 export { Topbar } from './topbar/topbar';
