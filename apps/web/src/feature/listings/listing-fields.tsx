@@ -3,31 +3,47 @@
 import { useState, type FormEvent } from 'react';
 import type { NewProduct, Tag } from '@/models';
 import { Button, TextArea, TextField } from '@/ui';
-import styles from './product-fields.module.css';
+import styles from './listing-fields.module.css';
 
-const empty = {
-  name: '',
-  description: '',
-  price: '',
-  tagIds: [] as string[],
-  images: [] as File[],
-};
-
-/** Fields for a new listing: name, description, price, tags, and pictures. */
-export function ProductFields({
+/** Fields for a listing: name, description, price, stock, tags, and pictures. */
+export function ListingFields({
   tags,
   pending,
+  requireImages,
+  submitLabel,
+  initial,
   onSubmit,
 }: {
+  /** Tags the seller can attach. Empty when the shop has none. */
   readonly tags: readonly Tag[];
+
+  /** True while the save is in flight. */
   readonly pending: boolean;
+
+  /** True when a picture is required. An edit can keep the current pictures. */
+  readonly requireImages: boolean;
+
+  /** Label of the submit control. */
+  readonly submitLabel: string;
+
+  /** Values already stored. Absent when the form starts empty. */
+  readonly initial?: {
+    readonly name: string;
+    readonly description: string;
+    readonly price: number;
+    readonly stock: number;
+    readonly tagIds: readonly string[];
+  };
+
+  /** Stores the listing. */
   readonly onSubmit: (input: NewProduct) => Promise<void>;
 }) {
-  const [name, setName] = useState(empty.name);
-  const [description, setDescription] = useState(empty.description);
-  const [price, setPrice] = useState(empty.price);
-  const [tagIds, setTagIds] = useState<readonly string[]>(empty.tagIds);
-  const [images, setImages] = useState<readonly File[]>(empty.images);
+  const [name, setName] = useState(initial?.name ?? '');
+  const [description, setDescription] = useState(initial?.description ?? '');
+  const [price, setPrice] = useState(initial ? String(initial.price) : '');
+  const [stock, setStock] = useState(initial ? String(initial.stock) : '');
+  const [tagIds, setTagIds] = useState<readonly string[]>(initial?.tagIds ?? []);
+  const [images, setImages] = useState<readonly File[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   function toggleTag(id: string) {
@@ -39,13 +55,16 @@ export function ProductFields({
     const nextName = name.trim();
     const nextDescription = description.trim();
     const nextPrice = Number(price);
+    const nextStock = Number(stock.trim());
+    const priceOk = Number.isInteger(nextPrice) && nextPrice >= 1;
+    const stockOk = stock.trim() !== '' && Number.isInteger(nextStock) && nextStock >= 0;
 
-    if (nextName.length < 2 || !nextDescription || !Number.isInteger(nextPrice) || nextPrice < 1) {
-      setError('Название, описание и целая цена больше нуля');
+    if (nextName.length < 2 || !nextDescription || !priceOk || !stockOk) {
+      setError('Название, описание, целая цена больше нуля и количество от нуля');
       return;
     }
 
-    if (images.length === 0) {
+    if (requireImages && images.length === 0) {
       setError('Добавьте хотя бы одну картинку');
       return;
     }
@@ -57,14 +76,10 @@ export function ProductFields({
         name: nextName,
         description: nextDescription,
         price: nextPrice,
+        stock: nextStock,
         tagIds,
         images,
       });
-      setName('');
-      setDescription('');
-      setPrice('');
-      setTagIds([]);
-      setImages([]);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Не удалось сохранить товар');
     }
@@ -98,16 +113,22 @@ export function ProductFields({
         />
       </label>
 
+      <label>
+        <span className="sr">Количество</span>
+        <TextField
+          value={stock}
+          onChange={(event) => setStock(event.target.value)}
+          placeholder="Количество"
+          name="stock"
+          inputMode="numeric"
+        />
+      </label>
+
       {tags.length > 0 ? (
         <div className={styles.tags}>
           {tags.map((tag) => (
             <label key={tag.id}>
-              <input
-                type="checkbox"
-                checked={tagIds.includes(tag.id)}
-                onChange={() => toggleTag(tag.id)}
-              />{' '}
-              {tag.name}
+              <input type="checkbox" checked={tagIds.includes(tag.id)} onChange={() => toggleTag(tag.id)} /> {tag.name}
             </label>
           ))}
         </div>
@@ -125,7 +146,7 @@ export function ProductFields({
       </label>
 
       <Button type="submit" disabled={pending}>
-        {pending ? 'Сохраняем…' : 'Добавить товар'}
+        {pending ? 'Сохраняем…' : submitLabel}
       </Button>
 
       {error ? <p className="status">{error}</p> : null}
