@@ -1,3 +1,7 @@
+.column {
+  width: min(520px, 100%);
+}
+
 .title {
   font-size: 40px;
 }
@@ -6,4 +10,13 @@
   display: grid;
   gap: 12px;
   margin-top: 18px;
+}
+
+.links {
+  margin: 0;
+  font-family: var(--sans);
+}
+
+.links a {
+  color: var(--accent);
 }

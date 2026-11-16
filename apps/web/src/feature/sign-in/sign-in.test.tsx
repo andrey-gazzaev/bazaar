@@ -1,14 +1,27 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { SessionProvider } from '@/context';
 import { SignIn } from './sign-in';
+
+vi.mock('@/dtos/api/session/session.api', () => ({
+  sessionApi: {
+    current: vi.fn().mockResolvedValue(null),
+    login: vi.fn(),
+    register: vi.fn(),
+    leave: vi.fn(),
+  },
+}));
 
 describe('SignIn', () => {
   it('asks for email and password before calling the API', () => {
-    const client = new QueryClient();
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+
     render(
       <QueryClientProvider client={client}>
-        <SignIn />
+        <SessionProvider>
+          <SignIn />
+        </SessionProvider>
       </QueryClientProvider>,
     );
 

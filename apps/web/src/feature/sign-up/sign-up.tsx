@@ -1,7 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
+import { useSessionContext } from '@/context';
 import type { RegisterInput } from '@/models';
 import { useSignUp } from '@/queries';
 import { Button, Page, Panel, SelectField, TextField } from '@/ui';
@@ -10,12 +11,17 @@ import styles from './sign-up.module.css';
 /** Registration for a client or a seller. */
 export function SignUp() {
   const signUp = useSignUp();
+  const session = useSessionContext();
   const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<RegisterInput['role']>('CLIENT');
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (session.user) router.replace('/');
+  }, [session.user, router]);
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -37,8 +43,10 @@ export function SignUp() {
     }
   }
 
+  if (session.user) return null;
+
   return (
-    <Page>
+    <Page className={styles.column}>
       <Panel>
         <h1 className={styles.title}>Регистрация</h1>
 
@@ -85,6 +93,12 @@ export function SignUp() {
           </Button>
 
           {error ? <p className="status">{error}</p> : null}
+
+          <p className={styles.links}>
+            <a href="/sign-in">Уже есть аккаунт? Войти</a>
+            {' · '}
+            <a href="/">Каталог</a>
+          </p>
         </form>
       </Panel>
     </Page>

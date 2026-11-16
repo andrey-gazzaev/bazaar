@@ -1,7 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
+import { useSessionContext } from '@/context';
 import { useSignIn } from '@/queries';
 import { Breadcrumb, Button, Page, Panel, TextField } from '@/ui';
 import styles from './sign-in.module.css';
@@ -9,10 +10,15 @@ import styles from './sign-in.module.css';
 /** Email and password form. */
 export function SignIn() {
   const signIn = useSignIn();
+  const session = useSessionContext();
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (session.user) router.replace('/');
+  }, [session.user, router]);
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -32,6 +38,8 @@ export function SignIn() {
       setError(caught instanceof Error ? caught.message : 'Не удалось войти');
     }
   }
+
+  if (session.user) return null;
 
   return (
     <Page className={styles.column}>
@@ -76,6 +84,8 @@ export function SignIn() {
 
           <p className={styles.links}>
             <a href="/sign-up">Нет аккаунта? Регистрация</a>
+            {' · '}
+            <a href="/">Каталог</a>
           </p>
         </form>
       </Panel>

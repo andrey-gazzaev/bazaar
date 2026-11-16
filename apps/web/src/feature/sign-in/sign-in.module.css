@@ -2,7 +2,7 @@
   display: grid;
   gap: 16px;
   align-content: start;
-  max-width: 520px;
+  width: min(520px, 100%);
 }
 
 .title {
