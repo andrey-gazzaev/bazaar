@@ -1,62 +1,66 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
-import { useProductCards } from '@/hooks';
+import type { CatalogQuery } from '@/models';
+import { useCatalog } from '@/hooks';
+import { useTags } from '@/queries';
 import { Page } from '@/ui';
-import type { ProductCardVm } from '@/view-models';
+import { catalogHref, catalogQueryFromSearchParams } from './catalog-query';
 import styles from './catalog.module.css';
 import { CatalogFilters } from './catalog-filters';
 import { CatalogResults } from './catalog-results';
-import { filterProductCards } from './filter-product-cards';
 
-/** Filtered catalog of listings. */
+/** Public catalog. The address holds the filters, and the server returns the page. */
 export function Catalog() {
-  const { cards, isLoading, error } = useProductCards();
   const params = useSearchParams();
   const router = useRouter();
-  const [query, setQuery] = useState('');
-  const [ceiling, setCeiling] = useState<number | null>(null);
+  const query = catalogQueryFromSearchParams(params);
+  const { cards, page, pageCount, total, ceiling, isLoading, error } = useCatalog(query);
+  const tags = useTags();
 
-  if (isLoading) return <Page><p className="muted">Загрузка…</p></Page>;
+  if (isLoading || tags.isLoading) return <Page><p className="muted">Загрузка…</p></Page>;
 
   if (error) {
     const message = error instanceof Error ? error.message : 'Не удалось загрузить товары';
+
     return <Page><p className="status">{message}</p></Page>;
   }
 
-  const tag = params.get('tag') ?? '';
-  const tags = chipTags(cards);
-  const max = cards.reduce((highest, card) => Math.max(highest, card.price), 0);
+  const filtered = query.q !== '' || query.tag !== '' || query.maxPrice !== null;
 
-  const visible = filterProductCards(cards, { query, tag, maxPrice: ceiling });
+  function replace(next: CatalogQuery) {
+    router.replace(catalogHref(next));
+  }
 
-  function chooseTag(next: string) {
-    router.replace(next === '' ? '/' : `/?tag=${encodeURIComponent(next)}`);
+  function filter(patch: Partial<Omit<CatalogQuery, 'page'>>) {
+    replace({ ...query, ...patch, page: 1 });
   }
 
   return (
     <Page>
       <div className={styles.stack}>
         <CatalogFilters
-          query={query}
-          onQuery={setQuery}
-          tags={tags}
-          tag={tag}
-          onTag={chooseTag}
-          max={max}
-          price={ceiling ?? max}
-          onPrice={setCeiling}
+          query={query.q}
+          onQuery={(q) => filter({ q })}
+          tags={(tags.data ?? []).map((tag) => tag.name)}
+          tag={query.tag}
+          onTag={(tag) => filter({ tag })}
+          sort={query.sort}
+          onSort={(sort) => filter({ sort })}
+          max={ceiling}
+          price={query.maxPrice ?? ceiling}
+          onPrice={(maxPrice) => filter({ maxPrice })}
         />
 
-        <CatalogResults cards={visible} catalogEmpty={cards.length === 0} />
+        <CatalogResults
+          cards={cards}
+          total={total}
+          page={page}
+          pageCount={pageCount}
+          catalogEmpty={total === 0 && !filtered}
+          onPage={(next) => replace({ ...query, page: next })}
+        />
       </div>
     </Page>
   );
-}
-
-function chipTags(cards: readonly ProductCardVm[]): readonly string[] {
-  const names = new Set(cards.flatMap((card) => card.tags));
-
-  return [...names].sort((left, right) => left.localeCompare(right, 'ru'));
 }

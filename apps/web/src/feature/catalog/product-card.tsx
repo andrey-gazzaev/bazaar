@@ -11,6 +11,7 @@ export function ProductCard({ card }: { readonly card: ProductCardVm }) {
       <div className={styles.body}>
         <h2 className={styles.title}>{card.name}</h2>
         <p className={styles.price}>{card.priceLabel}</p>
+        <p className={styles.stock}>{card.stockLabel}</p>
 
         <p className={styles.seller}>
           <span className={styles.shop}>

@@ -11,6 +11,8 @@ describe('ProductCard', () => {
           name: 'Льняная сумка',
           price: 2400,
           priceLabel: '2 400 ₽',
+          stock: 4,
+          stockLabel: 'Осталось: 4',
           image: '',
           sellerName: 'Продавец',
           tags: ['Дом'],
@@ -20,6 +22,7 @@ describe('ProductCard', () => {
 
     expect(screen.getByRole('link', { name: /Льняная сумка/ })).toHaveAttribute('href', '/products/p1');
     expect(screen.getByText('2 400 ₽')).toBeInTheDocument();
+    expect(screen.getByText('Осталось: 4')).toBeInTheDocument();
     expect(screen.queryByText('Дом')).not.toBeInTheDocument();
     expect(screen.getByText('Продавец')).toBeInTheDocument();
   });

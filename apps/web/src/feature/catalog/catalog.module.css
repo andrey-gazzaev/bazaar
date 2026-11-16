@@ -37,6 +37,13 @@
   font-weight: 700;
 }
 
+.stock {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 13px;
+}
+
 .seller {
   display: flex;
   align-items: center;

@@ -1,24 +1,41 @@
 import { Panel } from '@/ui';
 import type { ProductCardVm } from '@/view-models';
+import { CatalogPager } from './catalog-pager';
 import styles from './catalog-results.module.css';
 import { ProductCard } from './product-card';
 
-/** Heading, count, and the cards that matched. */
+/** Heading, count, cards, and the pager. */
 export function CatalogResults({
   cards,
+  total,
+  page,
+  pageCount,
   catalogEmpty,
+  onPage,
 }: {
-  /** Cards that passed the filter. Empty when none matched. */
+  /** Cards on this page. Empty when none matched. */
   readonly cards: readonly ProductCardVm[];
+
+  /** How many listings match the filter. */
+  readonly total: number;
+
+  /** Current page, starting at 1. */
+  readonly page: number;
+
+  /** How many pages match. Zero when nothing matches. */
+  readonly pageCount: number;
 
   /** True when the shop has no listings at all. */
   readonly catalogEmpty: boolean;
+
+  /** Stores the next page. */
+  readonly onPage: (page: number) => void;
 }) {
   return (
     <Panel className={styles.panel}>
       <div className={styles.head}>
         <h1 className={styles.title}>Каталог</h1>
-        <p className={styles.count}>Найдено товаров: {cards.length}</p>
+        <p className={styles.count}>Найдено товаров: {total}</p>
       </div>
 
       {catalogEmpty ? <p className="muted">Пока нет товаров.</p> : null}
@@ -32,6 +49,8 @@ export function CatalogResults({
           ))}
         </div>
       ) : null}
+
+      <CatalogPager page={page} pageCount={pageCount} onPage={onPage} />
     </Panel>
   );
 }

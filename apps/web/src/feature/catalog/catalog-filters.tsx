@@ -1,14 +1,17 @@
+import type { CatalogSort } from '@/models';
 import { formatPrice } from '@/services';
-import { Chip, Icon, Panel, Slider, TextField } from '@/ui';
+import { Chip, Icon, Panel, SelectField, Slider, TextField } from '@/ui';
 import styles from './catalog-filters.module.css';
 
-/** Search, tag chips, and the price ceiling. */
+/** Search, tag chips, sort, and the price ceiling. */
 export function CatalogFilters({
   query,
   onQuery,
   tags,
   tag,
   onTag,
+  sort,
+  onSort,
   max,
   price,
   onPrice,
@@ -19,7 +22,7 @@ export function CatalogFilters({
   /** Stores the next search text. */
   readonly onQuery: (query: string) => void;
 
-  /** Tag names offered as chips. Empty when no listing has a tag. */
+  /** Tag names offered as chips. Empty when the shop has no tags. */
   readonly tags: readonly string[];
 
   /** Selected tag. Empty when every tag is included. */
@@ -28,7 +31,13 @@ export function CatalogFilters({
   /** Stores the next tag. Empty clears the selection. */
   readonly onTag: (tag: string) => void;
 
-  /** Highest listing price, in whole rubles. Zero when the catalog is empty. */
+  /** Current sort. */
+  readonly sort: CatalogSort;
+
+  /** Stores the next sort. */
+  readonly onSort: (sort: CatalogSort) => void;
+
+  /** Highest approved price, in whole rubles. Zero when the catalog is empty. */
   readonly max: number;
 
   /** Ceiling shown on the slider, in whole rubles. */
@@ -58,6 +67,13 @@ export function CatalogFilters({
           </Chip>
         ))}
       </div>
+
+      <SelectField label="Сортировка" value={sort} onChange={(event) => onSort(event.target.value as CatalogSort)}>
+        <option value="newest">Сначала новые</option>
+        <option value="price_asc">Сначала дешевле</option>
+        <option value="price_desc">Сначала дороже</option>
+        <option value="name">По названию</option>
+      </SelectField>
 
       <Slider
         label="Цена до"
