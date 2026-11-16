@@ -15,4 +15,3 @@ export { Pill } from './pill/pill';
 export { Shell } from './shell/shell';
 export { Sidebar } from './sidebar/sidebar';
 export { Slider } from './slider/slider';
-export { Topbar } from './topbar/topbar';

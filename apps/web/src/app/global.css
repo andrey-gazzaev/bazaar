@@ -13,7 +13,6 @@
   --radius: 16px;
   --radius-control: 10px;
   --shadow: 0 8px 24px rgb(28 36 48 / 6%);
-  --page: min(1080px, calc(100% - 40px));
   --font: 'Segoe UI', system-ui, sans-serif;
   --sans: 'Segoe UI', system-ui, sans-serif;
   font-family: var(--font);
