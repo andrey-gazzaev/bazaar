@@ -1,0 +1,15 @@
+.form {
+  display: grid;
+  gap: 12px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  font-family: var(--sans);
+}
+
+.file {
+  font-family: var(--sans);
+}
