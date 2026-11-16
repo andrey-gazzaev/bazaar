@@ -5,11 +5,17 @@ import { useState } from 'react';
 import { useSessionContext } from '@/context';
 import { formatPrice } from '@/services';
 import { useDeleteProduct, useProduct } from '@/queries';
-import { Button, Media, Page, Panel, Pill } from '@/ui';
+import { Breadcrumb, Button, Icon, Page, Panel, Pill, type Crumb } from '@/ui';
 import styles from './product-screen.module.css';
+import { ProductGallery } from './product-gallery';
 
-/** Listing, its price, and the actions of the current person. */
-export function ProductScreen({ productId }: { readonly productId: string }) {
+/** One listing: its pictures, price, and the current person's actions. */
+export function ProductScreen({
+  productId,
+}: {
+  /** Listing to show. */
+  readonly productId: string;
+}) {
   const product = useProduct(productId);
   const session = useSessionContext();
   const remove = useDeleteProduct();
@@ -25,8 +31,16 @@ export function ProductScreen({ productId }: { readonly productId: string }) {
   }
 
   const listing = product.data;
+  const category = listing.tags[0];
   const owns = session.user?.id === listing.sellerId;
   const canBuy = session.user && session.user.role !== 'ADMIN';
+
+  const crumbs: readonly Crumb[] = [
+    { href: '/', label: 'Главная' },
+    { href: '/', label: 'Каталог' },
+    ...(category ? [{ href: `/?tag=${encodeURIComponent(category.name)}`, label: category.name }] : []),
+    { label: listing.name },
+  ];
 
   async function onDelete() {
     setError(null);
@@ -41,58 +55,64 @@ export function ProductScreen({ productId }: { readonly productId: string }) {
 
   return (
     <Page>
-      <div className={styles.layout}>
-        <div className={styles.gallery}>
-          <div className={styles.frame}>
-            {listing.images[0] ? <Media src={listing.images[0]} alt={listing.name} /> : null}
-          </div>
+      <div className={styles.stack}>
+        <Breadcrumb items={crumbs} />
 
-          {listing.images.length > 1 ? (
-            <div className={styles.thumbs}>
-              {listing.images.slice(1).map((image) => (
-                <div className={styles.thumb} key={image}>
-                  <Media src={image} alt="" />
-                </div>
-              ))}
-            </div>
-          ) : null}
-        </div>
+        <div className={styles.layout}>
+          <ProductGallery name={listing.name} images={listing.images} />
 
-        <Panel>
-          <div className={styles.copy}>
-            <h1 className={styles.title}>{listing.name}</h1>
-            <p className={styles.price}>{formatPrice(listing.price)}</p>
-            <p className="muted">{listing.sellerName}</p>
-            <p>{listing.description}</p>
-
-            {listing.tags.length > 0 ? (
-              <div className={styles.tags}>
-                {listing.tags.map((tag) => (
-                  <Pill key={tag.id}>{tag.name}</Pill>
-                ))}
+          <Panel>
+            <div className={styles.copy}>
+              <div className={styles.heading}>
+                {category ? <p className={styles.kicker}>{category.name}</p> : null}
+                <h1 className={styles.title}>{listing.name}</h1>
               </div>
-            ) : null}
 
-            <div className={styles.actions}>
-              {canBuy ? <a href={`/products/${listing.id}/checkout`}>Купить</a> : null}
-              {!session.user ? <a href="/sign-in">Войдите, чтобы купить</a> : null}
+              <p className={styles.price}>{formatPrice(listing.price)}</p>
 
-              {owns && !confirming ? (
-                <Button variant="danger" onClick={() => setConfirming(true)}>
-                  Удалить
-                </Button>
+              <p className={styles.seller}>
+                <span className={styles.shop}>
+                  <Icon name="shop" />
+                </span>
+                {listing.sellerName}
+              </p>
+
+              <p className={styles.description}>{listing.description}</p>
+
+              {listing.tags.length > 0 ? (
+                <div className={styles.tags}>
+                  {listing.tags.map((tag) => (
+                    <Pill key={tag.id}>{tag.name}</Pill>
+                  ))}
+                </div>
               ) : null}
 
-              {owns && confirming ? (
-                <Button variant="danger" onClick={() => void onDelete()} disabled={remove.isPending}>
-                  {remove.isPending ? 'Удаляем…' : 'Подтвердить удаление'}
-                </Button>
-              ) : null}
+              <div className={styles.actions}>
+                {canBuy ? (
+                  <Button className={styles.buy} href={`/products/${listing.id}/checkout`}>
+                    Купить
+                  </Button>
+                ) : null}
+
+                {!session.user ? <a href="/sign-in">Войдите, чтобы купить</a> : null}
+
+                {owns && !confirming ? (
+                  <Button variant="danger" onClick={() => setConfirming(true)}>
+                    Удалить
+                  </Button>
+                ) : null}
+
+                {owns && confirming ? (
+                  <Button variant="danger" onClick={() => void onDelete()} disabled={remove.isPending}>
+                    {remove.isPending ? 'Удаляем…' : 'Подтвердить удаление'}
+                  </Button>
+                ) : null}
+              </div>
+
+              {error ? <p className="status">{error}</p> : null}
             </div>
-
-            {error ? <p className="status">{error}</p> : null}
-          </div>
-        </Panel>
+          </Panel>
+        </div>
       </div>
     </Page>
   );
