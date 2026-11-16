@@ -1,4 +1,5 @@
 export { Button } from './button/button';
+export { Chip } from './chip/chip';
 export { SelectField } from './field/select-field';
 export { TextArea } from './field/text-area';
 export { TextField } from './field/text-field';
