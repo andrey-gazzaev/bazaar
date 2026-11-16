@@ -1,12 +1,7 @@
 import { IsString, MaxLength, MinLength } from 'class-validator';
 
-/** Delivery details for a mock purchase of one listing. */
+/** Delivery details for a mock purchase of the cart. */
 export class CreateOrderDto {
-  /** Listing being bought. */
-  @IsString()
-  @MinLength(1, { message: 'Не выбран товар' })
-  public productId!: string;
-
   /** Person who receives the parcel. */
   @IsString()
   @MinLength(2, { message: 'Укажите, кому доставить' })

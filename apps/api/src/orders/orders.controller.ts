@@ -9,17 +9,20 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderDto } from './order.dto';
 import { OrdersService } from './orders.service';
 
-/** Mock checkout. */
+/** Mock checkout of the cart. */
 @Controller('orders')
 export class OrdersController {
-  /** Stores a paid order. */
+  /** Stores one paid order per cart line. */
   public constructor(@Inject(OrdersService) private readonly orders: OrdersService) {}
 
-  /** Buys one listing after the buyer has filled in delivery. */
+  /** Buys the cart after the buyer has filled in delivery. */
   @Post()
   @Roles(Role.CLIENT, Role.SELLER)
   @UseGuards(AuthGuard, RolesGuard)
-  public async create(@CurrentUser() user: PublicUser, @Body() dto: CreateOrderDto): Promise<{ order: OrderDto }> {
-    return { order: await this.orders.create(user, dto) };
+  public async create(
+    @CurrentUser() user: PublicUser,
+    @Body() dto: CreateOrderDto,
+  ): Promise<{ orders: readonly OrderDto[] }> {
+    return { orders: await this.orders.create(user, dto) };
   }
 }
