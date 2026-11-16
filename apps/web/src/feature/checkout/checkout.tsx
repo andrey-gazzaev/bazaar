@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { useSessionContext } from '@/context';
-import { buildCheckout } from '@/hooks';
+import { useCheckout } from '@/hooks';
 import type { Order, Shipping } from '@/models';
-import { useCreateOrder, useProduct } from '@/queries';
+import { useCreateOrder } from '@/queries';
 import { formatPrice } from '@/services';
 import { Page, Panel } from '@/ui';
 import { CheckoutForm } from './checkout-form';
@@ -12,11 +12,11 @@ import { CheckoutForm } from './checkout-form';
 /** Delivery details and a mock purchase of one listing. */
 export function Checkout({ productId }: { readonly productId: string }) {
   const session = useSessionContext();
-  const product = useProduct(productId);
+  const { checkout, isLoading, error } = useCheckout(productId);
   const createOrder = useCreateOrder();
   const [order, setOrder] = useState<Order | null>(null);
 
-  if (session.isLoading || product.isLoading) return <Page><p className="muted">Загрузка…</p></Page>;
+  if (session.isLoading || isLoading) return <Page><p className="muted">Загрузка…</p></Page>;
 
   if (!session.user) {
     return (
@@ -42,8 +42,8 @@ export function Checkout({ productId }: { readonly productId: string }) {
     );
   }
 
-  if (product.error || !product.data) {
-    const message = product.error instanceof Error ? product.error.message : 'Товар не найден';
+  if (error || !checkout) {
+    const message = error instanceof Error ? error.message : 'Товар не найден';
     return <Page><p className="status">{message}</p></Page>;
   }
 
@@ -63,7 +63,7 @@ export function Checkout({ productId }: { readonly productId: string }) {
             <p className="muted">Сумма {formatPrice(order.price)}. Оплата в этой версии не списывает деньги.</p>
           </div>
         ) : (
-          <CheckoutForm checkout={buildCheckout(product.data)} pending={createOrder.isPending} onSubmit={onSubmit} />
+          <CheckoutForm checkout={checkout} pending={createOrder.isPending} onSubmit={onSubmit} />
         )}
       </Panel>
     </Page>
