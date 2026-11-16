@@ -1,14 +1,15 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { memo, useState } from 'react';
+import { useState } from 'react';
 import { useSessionContext } from '@/context';
 import { formatPrice } from '@/services';
 import { useDeleteProduct, useProduct } from '@/queries';
 import { Button, Media, Page, Panel, Pill } from '@/ui';
 import styles from './product-screen.module.css';
 
-const productScreenComponent = function ProductScreenComponent({ productId }: { readonly productId: string }) {
+/** Listing, its price, and the actions of the current person. */
+export function ProductScreen({ productId }: { readonly productId: string }) {
   const product = useProduct(productId);
   const session = useSessionContext();
   const remove = useDeleteProduct();
@@ -95,7 +96,4 @@ const productScreenComponent = function ProductScreenComponent({ productId }: { 
       </div>
     </Page>
   );
-};
-productScreenComponent.displayName = 'ProductScreen';
-/** Listing, its price, and the actions of the current person. */
-export const ProductScreen = memo(productScreenComponent);
+}

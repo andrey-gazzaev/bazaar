@@ -1,8 +1,9 @@
 import clsx from 'clsx';
-import { memo, type ComponentProps } from 'react';
+import type { ComponentProps } from 'react';
 import styles from './button.module.css';
 
-const buttonComponent = function ButtonComponent({
+/** Action control. Primary is filled, ghost is quiet, danger is a destructive action. */
+export function Button({
   variant = 'primary',
   className,
   type = 'button',
@@ -11,7 +12,4 @@ const buttonComponent = function ButtonComponent({
   const tone = variant === 'ghost' ? styles.ghost : variant === 'danger' ? styles.danger : styles.primary;
 
   return <button type={type} className={clsx(tone, className)} {...props} />;
-};
-buttonComponent.displayName = 'Button';
-/** Action control. Primary is filled, ghost is quiet, danger is a destructive action. */
-export const Button = memo(buttonComponent);
+}

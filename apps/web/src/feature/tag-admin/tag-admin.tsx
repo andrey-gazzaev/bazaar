@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useState } from 'react';
+import { useState } from 'react';
 import { useSessionContext } from '@/context';
 import { useCreateTag, useDeleteTag, useTags, useUpdateTag } from '@/queries';
 import { Page, Panel } from '@/ui';
@@ -8,7 +8,8 @@ import styles from './tag-admin.module.css';
 import { TagForm } from './tag-form';
 import { TagList } from './tag-list';
 
-const tagAdminComponent = function TagAdminComponent() {
+/** Admin list and editor for tags. */
+export function TagAdmin() {
   const session = useSessionContext();
   const tags = useTags();
   const createTag = useCreateTag();
@@ -95,7 +96,4 @@ const tagAdminComponent = function TagAdminComponent() {
       </div>
     </Page>
   );
-};
-tagAdminComponent.displayName = 'TagAdmin';
-/** Admin list and editor for tags. */
-export const TagAdmin = memo(tagAdminComponent);
+}

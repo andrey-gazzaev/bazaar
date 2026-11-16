@@ -1,13 +1,13 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { memo } from 'react';
 import { useSessionContext } from '@/context';
 import { useSignOut } from '@/queries';
 import { Button } from '@/ui';
 import styles from './account-menu.module.css';
 
-const accountMenuComponent = function AccountMenuComponent() {
+/** Who is signed in, and the links for that role. */
+export function AccountMenu() {
   const session = useSessionContext();
   const signOut = useSignOut();
   const router = useRouter();
@@ -39,7 +39,4 @@ const accountMenuComponent = function AccountMenuComponent() {
       </Button>
     </span>
   );
-};
-accountMenuComponent.displayName = 'AccountMenu';
-/** Who is signed in, and the links for that role. */
-export const AccountMenu = memo(accountMenuComponent);
+}

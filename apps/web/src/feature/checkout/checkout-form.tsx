@@ -1,12 +1,13 @@
 'use client';
 
-import { memo, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import type { Shipping } from '@/models';
 import type { CheckoutVm } from '@/view-models';
 import { Button, Media, TextField } from '@/ui';
 import styles from './checkout-form.module.css';
 
-const checkoutFormComponent = function CheckoutFormComponent({
+/** Delivery form and the total for one listing. */
+export function CheckoutForm({
   checkout,
   pending,
   onSubmit,
@@ -85,7 +86,4 @@ const checkoutFormComponent = function CheckoutFormComponent({
       </form>
     </div>
   );
-};
-checkoutFormComponent.displayName = 'CheckoutForm';
-/** Delivery form and the total for one listing. */
-export const CheckoutForm = memo(checkoutFormComponent);
+}

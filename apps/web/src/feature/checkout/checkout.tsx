@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useState } from 'react';
+import { useState } from 'react';
 import { useSessionContext } from '@/context';
 import { buildCheckout } from '@/hooks';
 import type { Order, Shipping } from '@/models';
@@ -9,7 +9,8 @@ import { formatPrice } from '@/services';
 import { Page, Panel } from '@/ui';
 import { CheckoutForm } from './checkout-form';
 
-const checkoutComponent = function CheckoutComponent({ productId }: { readonly productId: string }) {
+/** Delivery details and a mock purchase of one listing. */
+export function Checkout({ productId }: { readonly productId: string }) {
   const session = useSessionContext();
   const product = useProduct(productId);
   const createOrder = useCreateOrder();
@@ -67,7 +68,4 @@ const checkoutComponent = function CheckoutComponent({ productId }: { readonly p
       </Panel>
     </Page>
   );
-};
-checkoutComponent.displayName = 'Checkout';
-/** Delivery details and a mock purchase of one listing. */
-export const Checkout = memo(checkoutComponent);
+}

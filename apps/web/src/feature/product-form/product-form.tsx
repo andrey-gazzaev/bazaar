@@ -1,14 +1,14 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { memo } from 'react';
 import { useSessionContext } from '@/context';
 import type { NewProduct } from '@/models';
 import { useCreateProduct, useTags } from '@/queries';
 import { Page, Panel } from '@/ui';
 import { ProductFields } from './product-fields';
 
-const productFormComponent = function ProductFormComponent() {
+/** Seller form that publishes a listing. */
+export function ProductForm() {
   const session = useSessionContext();
   const tags = useTags();
   const createProduct = useCreateProduct();
@@ -41,7 +41,4 @@ const productFormComponent = function ProductFormComponent() {
       </Panel>
     </Page>
   );
-};
-productFormComponent.displayName = 'ProductForm';
-/** Seller form that publishes a listing. */
-export const ProductForm = memo(productFormComponent);
+}

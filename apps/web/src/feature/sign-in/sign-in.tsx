@@ -1,12 +1,13 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { memo, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useSignIn } from '@/queries';
 import { Button, Page, Panel, TextField } from '@/ui';
 import styles from './sign-in.module.css';
 
-const signInComponent = function SignInComponent() {
+/** Email and password form. */
+export function SignIn() {
   const signIn = useSignIn();
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -77,7 +78,4 @@ const signInComponent = function SignInComponent() {
       </Panel>
     </Page>
   );
-};
-signInComponent.displayName = 'SignIn';
-/** Email and password form. */
-export const SignIn = memo(signInComponent);
+}

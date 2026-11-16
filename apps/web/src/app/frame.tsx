@@ -1,10 +1,11 @@
 'use client';
 
-import { memo, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { AccountMenu } from '@/feature';
 import { Shell, Topbar } from '@/ui';
 
-const frameComponent = function FrameComponent({ children }: { readonly children: ReactNode }) {
+/** Shop chrome: brand, account, and the page. */
+export function Frame({ children }: { readonly children: ReactNode }) {
   return (
     <Shell>
       <Topbar brand={<a href="/">Базар</a>}>
@@ -14,7 +15,4 @@ const frameComponent = function FrameComponent({ children }: { readonly children
       {children}
     </Shell>
   );
-};
-frameComponent.displayName = 'Frame';
-/** Shop chrome: brand, account, and the page. */
-export const Frame = memo(frameComponent);
+}

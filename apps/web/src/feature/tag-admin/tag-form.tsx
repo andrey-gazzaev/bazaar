@@ -1,10 +1,11 @@
 'use client';
 
-import { memo, type FormEvent } from 'react';
+import type { FormEvent } from 'react';
 import { Button, TextField } from '@/ui';
 import styles from './tag-admin.module.css';
 
-const tagFormComponent = function TagFormComponent({
+/** Name field for a new or renamed tag. */
+export function TagForm({
   name,
   editing,
   pending,
@@ -33,7 +34,4 @@ const tagFormComponent = function TagFormComponent({
       </Button>
     </form>
   );
-};
-tagFormComponent.displayName = 'TagForm';
-/** Name field for a new or renamed tag. */
-export const TagForm = memo(tagFormComponent);
+}

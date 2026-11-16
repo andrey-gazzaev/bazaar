@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import type { NewProduct, Tag } from '@/models';
 import { Button, TextArea, TextField } from '@/ui';
 import styles from './product-fields.module.css';
@@ -13,7 +13,8 @@ const empty = {
   images: [] as File[],
 };
 
-const productFieldsComponent = function ProductFieldsComponent({
+/** Fields for a new listing: name, description, price, tags, and pictures. */
+export function ProductFields({
   tags,
   pending,
   onSubmit,
@@ -130,7 +131,4 @@ const productFieldsComponent = function ProductFieldsComponent({
       {error ? <p className="status">{error}</p> : null}
     </form>
   );
-};
-productFieldsComponent.displayName = 'ProductFields';
-/** Fields for a new listing: name, description, price, tags, and pictures. */
-export const ProductFields = memo(productFieldsComponent);
+}

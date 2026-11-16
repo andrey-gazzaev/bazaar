@@ -1,9 +1,9 @@
-import { memo } from 'react';
 import type { UserRowVm } from '@/view-models';
 import { Button } from '@/ui';
 import styles from './user-admin.module.css';
 
-const userTableComponent = function UserTableComponent({
+/** Accounts an admin can change or remove. */
+export function UserTable({
   rows,
   onEdit,
   onDelete,
@@ -43,7 +43,4 @@ const userTableComponent = function UserTableComponent({
       </tbody>
     </table>
   );
-};
-userTableComponent.displayName = 'UserTable';
-/** Accounts an admin can change or remove. */
-export const UserTable = memo(userTableComponent);
+}

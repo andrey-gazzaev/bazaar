@@ -1,9 +1,9 @@
-import { memo } from 'react';
 import type { ProductCardVm } from '@/view-models';
 import { Media, Pill } from '@/ui';
 import styles from './catalog.module.css';
 
-const productCardComponent = function ProductCardComponent({ card }: { readonly card: ProductCardVm }) {
+/** One listing in the catalog. */
+export function ProductCard({ card }: { readonly card: ProductCardVm }) {
   return (
     <a className={styles.card} href={`/products/${card.id}`}>
       <div className={styles.cover}>{card.image ? <Media src={card.image} alt="" /> : null}</div>
@@ -24,7 +24,4 @@ const productCardComponent = function ProductCardComponent({ card }: { readonly 
       </div>
     </a>
   );
-};
-productCardComponent.displayName = 'ProductCard';
-/** One listing in the catalog. */
-export const ProductCard = memo(productCardComponent);
+}

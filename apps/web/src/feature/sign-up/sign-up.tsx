@@ -1,13 +1,14 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { memo, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import type { RegisterInput } from '@/models';
 import { useSignUp } from '@/queries';
 import { Button, Page, Panel, SelectField, TextField } from '@/ui';
 import styles from './sign-up.module.css';
 
-const signUpComponent = function SignUpComponent() {
+/** Registration for a client or a seller. */
+export function SignUp() {
   const signUp = useSignUp();
   const router = useRouter();
   const [name, setName] = useState('');
@@ -88,7 +89,4 @@ const signUpComponent = function SignUpComponent() {
       </Panel>
     </Page>
   );
-};
-signUpComponent.displayName = 'SignUp';
-/** Registration for a client or a seller. */
-export const SignUp = memo(signUpComponent);
+}

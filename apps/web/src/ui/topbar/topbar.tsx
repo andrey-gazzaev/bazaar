@@ -1,7 +1,8 @@
-import { memo, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import styles from './topbar.module.css';
 
-const topbarComponent = function TopbarComponent({
+/** Sticky bar with the brand and page actions. */
+export function Topbar({
   brand,
   children,
 }: {
@@ -14,7 +15,4 @@ const topbarComponent = function TopbarComponent({
       <div className={styles.actions}>{children}</div>
     </header>
   );
-};
-topbarComponent.displayName = 'Topbar';
-/** Sticky bar with the brand and page actions. */
-export const Topbar = memo(topbarComponent);
+}

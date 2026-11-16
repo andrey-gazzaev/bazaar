@@ -1,13 +1,14 @@
 'use client';
 
-import { memo, useMemo } from 'react';
+import { useMemo } from 'react';
 import { buildProductCard } from '@/hooks';
 import { useProducts } from '@/queries';
 import { Page } from '@/ui';
 import styles from './catalog.module.css';
 import { ProductCard } from './product-card';
 
-const catalogComponent = function CatalogComponent() {
+/** Grid of listings. */
+export function Catalog() {
   const products = useProducts();
   const cards = useMemo(() => (products.data ?? []).map(buildProductCard), [products.data]);
 
@@ -31,7 +32,4 @@ const catalogComponent = function CatalogComponent() {
       </div>
     </Page>
   );
-};
-catalogComponent.displayName = 'Catalog';
-/** Grid of listings. */
-export const Catalog = memo(catalogComponent);
+}
