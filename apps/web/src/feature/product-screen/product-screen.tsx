@@ -3,7 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useSessionContext } from '@/context';
-import { formatPrice } from '@/services';
+import { useCart } from '@/hooks';
+import { formatPrice, formatStock } from '@/services';
 import { useDeleteProduct, useProduct } from '@/queries';
 import { Breadcrumb, Button, Icon, Page, Panel, Pill, type Crumb } from '@/ui';
 import styles from './product-screen.module.css';
@@ -19,8 +20,10 @@ export function ProductScreen({
   const product = useProduct(productId);
   const session = useSessionContext();
   const remove = useDeleteProduct();
+  const shop = useCart();
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);
+  const [added, setAdded] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   if (product.isLoading || session.isLoading) return <Page><p className="muted">Загрузка…</p></Page>;
@@ -33,7 +36,8 @@ export function ProductScreen({
   const listing = product.data;
   const category = listing.tags[0];
   const owns = session.user?.id === listing.sellerId;
-  const canBuy = session.user && session.user.role !== 'ADMIN';
+  const shopper = session.user?.role === 'CLIENT' || session.user?.role === 'SELLER';
+  const canBuy = listing.status === 'APPROVED' && shopper && listing.stock > 0;
 
   const crumbs: readonly Crumb[] = [
     { href: '/', label: 'Главная' },
@@ -41,6 +45,24 @@ export function ProductScreen({
     ...(category ? [{ href: `/?tag=${encodeURIComponent(category.name)}`, label: category.name }] : []),
     { label: listing.name },
   ];
+
+  async function add() {
+    if (!shop.cart) return;
+
+    const line = shop.cart.lines.find((item) => item.productId === listing.id);
+
+    if (line) return;
+
+    setError(null);
+
+    try {
+      await shop.setCartItem({ productId: listing.id, quantity: 1 });
+      setAdded(true);
+    } catch (caught) {
+      setAdded(false);
+      setError(caught instanceof Error ? caught.message : 'Не удалось добавить в корзину');
+    }
+  }
 
   async function onDelete() {
     setError(null);
@@ -69,6 +91,7 @@ export function ProductScreen({
               </div>
 
               <p className={styles.price}>{formatPrice(listing.price)}</p>
+              <p className="muted">{formatStock(listing.stock)}</p>
 
               <p className={styles.seller}>
                 <span className={styles.shop}>
@@ -89,12 +112,18 @@ export function ProductScreen({
 
               <div className={styles.actions}>
                 {canBuy ? (
-                  <Button className={styles.buy} href={`/products/${listing.id}/checkout`}>
-                    Купить
+                  <Button
+                    className={styles.buy}
+                    onClick={() => void add()}
+                    disabled={shop.isSaving || shop.isLoading || !shop.cart}
+                  >
+                    {shop.isSaving ? 'Добавляем…' : 'В корзину'}
                   </Button>
                 ) : null}
 
-                {!session.user ? <a href="/sign-in">Войдите, чтобы купить</a> : null}
+                {added ? <a href="/cart">Перейти в корзину</a> : null}
+
+                {!session.user && listing.stock > 0 ? <a href="/sign-in">Войдите, чтобы купить</a> : null}
 
                 {owns && !confirming ? (
                   <Button variant="danger" onClick={() => setConfirming(true)}>
