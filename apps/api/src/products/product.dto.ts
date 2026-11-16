@@ -1,3 +1,4 @@
+import type { ReviewStatus } from '@prisma/client';
 import type { TagDto } from '../tags/tag.dto';
 
 /** Listing returned to the shop. */
@@ -14,6 +15,12 @@ export type ProductDto = {
   /** Price in whole rubles. */
   readonly price: number;
 
+  /** Units still for sale. Zero means none can be bought. */
+  readonly stock: number;
+
+  /** Review state. Only an approved listing is public. */
+  readonly status: ReviewStatus;
+
   /** Account id of the seller. */
   readonly sellerId: string;
 
@@ -25,4 +32,22 @@ export type ProductDto = {
 
   /** Tags on the listing. Empty when it has none. */
   readonly tags: readonly TagDto[];
+};
+
+/** One page of the public catalog. */
+export type ProductPageDto = {
+  /** Approved listings on this page. Empty when the page is past the end. */
+  readonly products: readonly ProductDto[];
+
+  /** Page number, starting at 1. */
+  readonly page: number;
+
+  /** How many pages match the filter. Zero when nothing matches. */
+  readonly pageCount: number;
+
+  /** How many approved listings match the filter. */
+  readonly total: number;
+
+  /** Highest approved price in whole rubles, ignoring the filter. Zero when none exist. */
+  readonly ceiling: number;
 };

@@ -1,5 +1,6 @@
 import { Transform, Type } from 'class-transformer';
 import { IsArray, IsInt, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
+import { splitIds } from './split-ids';
 
 /** Text fields of a new listing. Pictures arrive as files. */
 export class CreateProductDto {
@@ -22,18 +23,15 @@ export class CreateProductDto {
   @Max(10_000_000, { message: 'Цена слишком большая' })
   public price!: number;
 
+  /** Units still for sale. */
+  @Type(() => Number)
+  @IsInt({ message: 'Количество должно быть целым числом' })
+  @Min(0, { message: 'Количество не может быть меньше нуля' })
+  public stock!: number;
+
   /** Tag ids. A form may send them as a comma-separated string. Empty when there are no tags. */
   @Transform(({ value }: { value: unknown }) => splitIds(value))
   @IsArray()
   @IsString({ each: true })
   public tagIds: string[] = [];
-}
-
-function splitIds(value: unknown): string[] {
-  if (Array.isArray(value)) return value.map(String);
-  if (typeof value !== 'string' || value.trim() === '') return [];
-  return value
-    .split(',')
-    .map((item) => item.trim())
-    .filter(Boolean);
 }

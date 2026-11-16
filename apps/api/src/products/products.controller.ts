@@ -7,7 +7,9 @@ import {
   HttpStatus,
   Inject,
   Param,
+  Patch,
   Post,
+  Query,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -15,33 +17,57 @@ import {
 import { Role } from '@prisma/client';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
+import { OptionalAuthGuard } from '../auth/optional-auth.guard';
+import { OptionalUser } from '../auth/optional-user.decorator';
 import { Roles } from '../auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { PublicUser } from '../common/public-user';
 import { CreateProductDto } from './dto/create-product.dto';
+import { ListProductsQuery } from './dto/list-products.query';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { imageUpload } from './image-upload';
-import { ProductDto } from './product.dto';
+import { ProductDto, ProductPageDto } from './product.dto';
 import { ProductsService } from './products.service';
 
-/** Public catalog and a seller's own listings. */
+/** Public catalog, a seller's own listings, and the admin queue. */
 @Controller('products')
 export class ProductsController {
   /** Reads and changes listings. */
   public constructor(@Inject(ProductsService) private readonly products: ProductsService) {}
 
-  /** Newest listings. */
+  /** One page of approved listings. */
   @Get()
-  public async list(): Promise<{ products: readonly ProductDto[] }> {
-    return { products: await this.products.list() };
+  public async list(@Query() query: ListProductsQuery): Promise<ProductPageDto> {
+    return this.products.list(query);
   }
 
-  /** One listing. */
+  /** Every listing of the signed-in seller. */
+  @Get('mine')
+  @Roles(Role.SELLER)
+  @UseGuards(AuthGuard, RolesGuard)
+  public async mine(@CurrentUser() user: PublicUser): Promise<{ products: readonly ProductDto[] }> {
+    return { products: await this.products.mine(user) };
+  }
+
+  /** Listings waiting for an admin. */
+  @Get('moderation')
+  @Roles(Role.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  public async moderation(): Promise<{ products: readonly ProductDto[] }> {
+    return { products: await this.products.moderation() };
+  }
+
+  /** One listing. A hidden card is returned only to its seller or an admin. */
   @Get(':id')
-  public async get(@Param('id') id: string): Promise<{ product: ProductDto }> {
-    return { product: await this.products.get(id) };
+  @UseGuards(OptionalAuthGuard)
+  public async get(
+    @Param('id') id: string,
+    @OptionalUser() viewer: PublicUser | null,
+  ): Promise<{ product: ProductDto }> {
+    return { product: await this.products.get(id, viewer) };
   }
 
-  /** Adds a listing for the signed-in seller. */
+  /** Adds a pending listing for the signed-in seller. */
   @Post()
   @Roles(Role.SELLER)
   @UseGuards(AuthGuard, RolesGuard)
@@ -52,6 +78,36 @@ export class ProductsController {
     @UploadedFiles() files: Express.Multer.File[] = [],
   ): Promise<{ product: ProductDto }> {
     return { product: await this.products.create(user, dto, files ?? []) };
+  }
+
+  /** Changes a listing the seller owns. */
+  @Patch(':id')
+  @Roles(Role.SELLER)
+  @UseGuards(AuthGuard, RolesGuard)
+  @UseInterceptors(imageUpload)
+  public async update(
+    @CurrentUser() user: PublicUser,
+    @Param('id') id: string,
+    @Body() dto: UpdateProductDto,
+    @UploadedFiles() files: Express.Multer.File[] = [],
+  ): Promise<{ product: ProductDto }> {
+    return { product: await this.products.update(user, id, dto, files ?? []) };
+  }
+
+  /** Makes one pending listing public. */
+  @Post(':id/approve')
+  @Roles(Role.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  public async approve(@Param('id') id: string): Promise<{ product: ProductDto }> {
+    return { product: await this.products.approve(id) };
+  }
+
+  /** Keeps one pending listing hidden. */
+  @Post(':id/reject')
+  @Roles(Role.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  public async reject(@Param('id') id: string): Promise<{ product: ProductDto }> {
+    return { product: await this.products.reject(id) };
   }
 
   /** Removes a listing the seller owns. */
