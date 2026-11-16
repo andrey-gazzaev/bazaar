@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
 import { useSignIn } from '@/queries';
-import { Button, Page, Panel, TextField } from '@/ui';
+import { Breadcrumb, Button, Page, Panel, TextField } from '@/ui';
 import styles from './sign-in.module.css';
 
 /** Email and password form. */
@@ -34,38 +34,41 @@ export function SignIn() {
   }
 
   return (
-    <Page>
+    <Page className={styles.column}>
+      <Breadcrumb
+        items={[
+          { href: '/', label: 'Главная' },
+          { label: 'Вход' },
+        ]}
+      />
+
       <Panel>
         <h1 className={styles.title}>Вход</h1>
 
-        <p className="muted">Email и пароль от аккаунта на Базаре.</p>
+        <p className="muted">Email и пароль</p>
 
         <form className={styles.form} onSubmit={(event) => void onSubmit(event)}>
-          <label>
-            <span className="sr">Email</span>
-            <TextField
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="Email"
-              autoComplete="username"
-              name="email"
-              type="email"
-            />
-          </label>
+          <TextField
+            label="Email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="Email"
+            autoComplete="username"
+            name="email"
+            type="email"
+          />
 
-          <label>
-            <span className="sr">Пароль</span>
-            <TextField
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              placeholder="Пароль"
-              autoComplete="current-password"
-              name="password"
-              type="password"
-            />
-          </label>
+          <TextField
+            label="Пароль"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="Пароль"
+            autoComplete="current-password"
+            name="password"
+            type="password"
+          />
 
-          <Button type="submit" disabled={signIn.isPending}>
+          <Button className={styles.submit} type="submit" disabled={signIn.isPending}>
             {signIn.isPending ? 'Входим…' : 'Войти'}
           </Button>
 

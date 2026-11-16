@@ -1,3 +1,10 @@
+.column {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+  max-width: 520px;
+}
+
 .title {
   font-size: 40px;
 }
@@ -8,6 +15,15 @@
   margin-top: 18px;
 }
 
+.submit {
+  width: 100%;
+}
+
 .links {
+  margin: 0;
   font-family: var(--sans);
+}
+
+.links a {
+  color: var(--accent);
 }
