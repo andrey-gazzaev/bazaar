@@ -1,14 +1,15 @@
 import type { Order, Shipping } from '@/models';
 import { api } from '../../http';
 import { mapOrder } from '../../mappers/order/map-order';
-import { orderResponseSchema } from '../../schemas/order/order-response.schema';
+import { ordersResponseSchema } from '../../schemas/order/orders-response.schema';
 
-/** Mock checkout. */
+/** Mock checkout of the cart. */
 export class OrderApi {
-  /** Buys one listing and stores it as paid. */
-  public async create(productId: string, shipping: Shipping): Promise<Order> {
-    const { data } = await api.post('/api/orders', { productId, ...shipping });
-    return mapOrder(orderResponseSchema.parse(data).order);
+  /** Buys the cart and stores one paid order per line. */
+  public async create(shipping: Shipping): Promise<readonly Order[]> {
+    const { data } = await api.post('/api/orders', shipping);
+
+    return ordersResponseSchema.parse(data).orders.map(mapOrder);
   }
 }
 
