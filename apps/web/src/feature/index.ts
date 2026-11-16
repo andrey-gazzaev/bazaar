@@ -1,6 +1,6 @@
 export { AccountMenu } from './account-menu/account-menu';
+export { Cart } from './cart/cart';
 export { Catalog } from './catalog/catalog';
-export { Checkout } from './checkout/checkout';
 export { ProductForm } from './product-form/product-form';
 export { ProductScreen } from './product-screen/product-screen';
 export { SignIn } from './sign-in/sign-in';

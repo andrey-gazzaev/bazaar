@@ -8,6 +8,11 @@
   font-size: 18px;
 }
 
+.lines {
+  display: grid;
+  gap: 12px;
+}
+
 .product {
   display: grid;
   grid-template-columns: 72px minmax(0, 1fr);
@@ -30,6 +35,13 @@
 
 .seller {
   font-size: 13px;
+}
+
+.quantity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
 }
 
 .rows {

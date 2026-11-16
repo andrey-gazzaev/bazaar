@@ -2,8 +2,8 @@
 
 import { useState, type FormEvent } from 'react';
 import type { Shipping } from '@/models';
-import type { CheckoutVm } from '@/view-models';
 import { Panel, SelectField, TextField } from '@/ui';
+import type { CartVm } from '@/view-models';
 import { OrderSummary } from './order-summary';
 import styles from './checkout-form.module.css';
 
@@ -47,15 +47,28 @@ function maskPhone(raw: string): string {
   return `${masked}-${second}`;
 }
 
-/** Address and order summary for one listing. */
+/** Address and the cart summary. */
 export function CheckoutForm({
-  checkout,
+  cart,
   pending,
   onSubmit,
+  onQuantity,
+  onRemove,
 }: {
-  readonly checkout: CheckoutVm;
+  /** Lines and totals to confirm. */
+  readonly cart: CartVm;
+
+  /** True while checkout is in flight. */
   readonly pending: boolean;
+
+  /** Stores the delivery details. */
   readonly onSubmit: (shipping: Shipping) => Promise<void>;
+
+  /** Stores the next quantity of one line. */
+  readonly onQuantity: (productId: string, quantity: number) => void;
+
+  /** Drops one line. */
+  readonly onRemove: (productId: string) => void;
 }) {
   const [recipientName, setRecipientName] = useState('');
   const [phone, setPhone] = useState('');
@@ -134,7 +147,7 @@ export function CheckoutForm({
           {error ? <p className="status">{error}</p> : null}
         </Panel>
 
-        <OrderSummary checkout={checkout} pending={pending} />
+        <OrderSummary cart={cart} pending={pending} onQuantity={onQuantity} onRemove={onRemove} />
       </div>
     </form>
   );
