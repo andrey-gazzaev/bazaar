@@ -1,3 +1,3 @@
 export { useCheckout } from './use-checkout';
-export { useProductCards } from './use-product-cards';
+export { useCatalog } from './use-catalog';
 export { useUserRows } from './use-user-rows';

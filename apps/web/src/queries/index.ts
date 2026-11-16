@@ -1,8 +1,8 @@
 export { useCreateOrder } from './orders/use-create-order/use-create-order';
+export { useCatalogPage } from './products/use-catalog-page/use-catalog-page';
 export { useCreateProduct } from './products/use-create-product/use-create-product';
 export { useDeleteProduct } from './products/use-delete-product/use-delete-product';
 export { useProduct } from './products/use-product/use-product';
-export { useProducts } from './products/use-products/use-products';
 export { useSession } from './session/use-session/use-session';
 export { useSignIn } from './session/use-sign-in/use-sign-in';
 export { useSignOut } from './session/use-sign-out/use-sign-out';

@@ -12,6 +12,12 @@ export type ProductCardVm = {
   /** Price label in rubles. */
   readonly priceLabel: string;
 
+  /** Units still for sale. */
+  readonly stock: number;
+
+  /** Stock line. "Нет в наличии" when none remain. */
+  readonly stockLabel: string;
+
   /** Cover image path. Empty when the listing has no pictures. */
   readonly image: string;
 
