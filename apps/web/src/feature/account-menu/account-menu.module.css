@@ -1,9 +1,26 @@
 .menu {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.guest {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: auto;
 }
 
 .name {
+  margin-top: 12px;
+  padding: 0 12px;
   color: var(--muted);
+  font-family: var(--sans);
+  font-size: 14px;
+}
+
+.leave {
+  align-self: flex-start;
+  margin-top: 8px;
 }
