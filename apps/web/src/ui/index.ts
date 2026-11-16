@@ -2,6 +2,8 @@ export { Button } from './button/button';
 export { SelectField } from './field/select-field';
 export { TextArea } from './field/text-area';
 export { TextField } from './field/text-field';
+export { Icon } from './icon/icon';
+export type { IconName } from './icon/icon';
 export { Media } from './media/media';
 export { Page } from './page/page';
 export { Panel } from './panel/panel';
