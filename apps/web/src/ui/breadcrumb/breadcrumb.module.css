@@ -1,0 +1,10 @@
+.breadcrumb {
+  color: var(--accent);
+  font-family: var(--sans);
+  font-size: 14px;
+}
+
+.breadcrumb a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

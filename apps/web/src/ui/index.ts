@@ -1,3 +1,5 @@
+export { Breadcrumb } from './breadcrumb/breadcrumb';
+export type { Crumb } from './breadcrumb/breadcrumb';
 export { Button } from './button/button';
 export { Chip } from './chip/chip';
 export { SelectField } from './field/select-field';
