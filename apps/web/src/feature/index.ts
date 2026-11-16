@@ -2,6 +2,7 @@ export { AccountMenu } from './account-menu/account-menu';
 export { Cart } from './cart/cart';
 export { Catalog } from './catalog/catalog';
 export { Listings } from './listings/listings';
+export { Moderation } from './moderation/moderation';
 export { ProductScreen } from './product-screen/product-screen';
 export { SignIn } from './sign-in/sign-in';
 export { SignUp } from './sign-up/sign-up';

@@ -1,0 +1,8 @@
+.stack {
+  display: grid;
+  gap: 16px;
+}
+
+.stack h1 {
+  font-size: 28px;
+}
