@@ -6,6 +6,7 @@ export { TextField } from './field/text-field';
 export { Icon } from './icon/icon';
 export type { IconName } from './icon/icon';
 export { Media } from './media/media';
+export { NavItem } from './nav-item/nav-item';
 export { Page } from './page/page';
 export { Panel } from './panel/panel';
 export { Pill } from './pill/pill';
