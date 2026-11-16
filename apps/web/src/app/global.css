@@ -1,20 +1,21 @@
 :root {
   color-scheme: light;
-  --bg: #f3ecdf;
-  --surface: #fffaf3;
-  --surface-2: #f6efe4;
-  --line: #e2d3c0;
-  --text: #241c14;
-  --muted: #74685b;
-  --accent: #b8431f;
-  --accent-ink: #fff8f3;
-  --danger: #9d2c2c;
-  --radius: 18px;
-  --radius-control: 12px;
-  --shadow: 0 18px 40px rgb(70 40 15 / 8%);
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --surface-2: #f3f5f8;
+  --line: #e6eaf0;
+  --text: #1c2430;
+  --muted: #8b95a5;
+  --accent: #2f6fed;
+  --accent-ink: #ffffff;
+  --accent-soft: #e8f0ff;
+  --danger: #c53636;
+  --radius: 16px;
+  --radius-control: 10px;
+  --shadow: 0 8px 24px rgb(28 36 48 / 6%);
   --page: min(1080px, calc(100% - 40px));
-  --font: 'Iowan Old Style', Palatino, 'Palatino Linotype', Georgia, serif;
-  --sans: 'Avenir Next', 'Segoe UI', sans-serif;
+  --font: 'Segoe UI', system-ui, sans-serif;
+  --sans: 'Segoe UI', system-ui, sans-serif;
   font-family: var(--font);
   background: var(--bg);
   color: var(--text);
@@ -28,9 +29,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(900px 420px at 0% -10%, rgb(184 67 31 / 12%), transparent 55%),
-    var(--bg);
+  background: var(--bg);
 }
 
 a {
