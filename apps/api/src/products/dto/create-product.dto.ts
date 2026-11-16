@@ -1,0 +1,39 @@
+import { Transform, Type } from 'class-transformer';
+import { IsArray, IsInt, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
+
+/** Text fields of a new listing. Pictures arrive as files. */
+export class CreateProductDto {
+  /** Listing title. */
+  @IsString()
+  @MinLength(2, { message: 'Название должно быть не короче 2 символов' })
+  @MaxLength(80, { message: 'Название слишком длинное' })
+  public name!: string;
+
+  /** What the buyer should know. */
+  @IsString()
+  @MinLength(1, { message: 'Добавьте описание' })
+  @MaxLength(2000, { message: 'Описание слишком длинное' })
+  public description!: string;
+
+  /** Price in whole rubles. */
+  @Type(() => Number)
+  @IsInt({ message: 'Цена должна быть целым числом' })
+  @Min(1, { message: 'Цена должна быть больше нуля' })
+  @Max(10_000_000, { message: 'Цена слишком большая' })
+  public price!: number;
+
+  /** Tag ids. A form may send them as a comma-separated string. Empty when there are no tags. */
+  @Transform(({ value }: { value: unknown }) => splitIds(value))
+  @IsArray()
+  @IsString({ each: true })
+  public tagIds: string[] = [];
+}
+
+function splitIds(value: unknown): string[] {
+  if (Array.isArray(value)) return value.map(String);
+  if (typeof value !== 'string' || value.trim() === '') return [];
+  return value
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
