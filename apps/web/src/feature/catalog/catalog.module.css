@@ -1,0 +1,45 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  display: grid;
+  grid-template-rows: 180px auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.cover {
+  background: var(--surface-2);
+}
+
+.body {
+  display: grid;
+  gap: 8px;
+  padding: 14px 14px 16px;
+}
+
+.title {
+  font-size: 22px;
+}
+
+.price {
+  font-family: var(--sans);
+  font-size: 18px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.seller {
+  font-family: var(--sans);
+  font-size: 13px;
+}
