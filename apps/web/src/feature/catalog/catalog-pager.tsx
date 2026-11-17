@@ -1,8 +1,9 @@
+import { memo } from 'react';
 import { Button } from '@/ui';
 import styles from './catalog-pager.module.css';
 
 /** Moves between catalog pages. Hidden when one page covers the result. */
-export function CatalogPager({
+const CatalogPagerComponent = function({
   page,
   pageCount,
   onPage,
@@ -34,3 +35,6 @@ export function CatalogPager({
     </div>
   );
 }
+
+CatalogPagerComponent.displayName = 'CatalogPager';
+export const CatalogPager = memo(CatalogPagerComponent);

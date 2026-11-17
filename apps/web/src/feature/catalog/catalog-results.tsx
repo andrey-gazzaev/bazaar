@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Panel } from '@/ui';
 import type { ProductCardVm } from '@/view-models';
 import { CatalogPager } from './catalog-pager';
@@ -5,7 +6,7 @@ import styles from './catalog-results.module.css';
 import { ProductCard } from './product-card';
 
 /** Heading, count, cards, and the pager. */
-export function CatalogResults({
+const CatalogResultsComponent = function({
   cards,
   total,
   page,
@@ -54,3 +55,6 @@ export function CatalogResults({
     </Panel>
   );
 }
+
+CatalogResultsComponent.displayName = 'CatalogResults';
+export const CatalogResults = memo(CatalogResultsComponent);

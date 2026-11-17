@@ -1,10 +1,11 @@
+import { memo } from 'react';
 import type { CatalogSort } from '@/models';
 import { formatPrice } from '@/services';
 import { Chip, Icon, Panel, SelectField, Slider, TextField } from '@/ui';
 import styles from './catalog-filters.module.css';
 
 /** Search, tag chips, sort, and the price ceiling. */
-export function CatalogFilters({
+const CatalogFiltersComponent = function({
   query,
   onQuery,
   tags,
@@ -86,3 +87,6 @@ export function CatalogFilters({
     </Panel>
   );
 }
+
+CatalogFiltersComponent.displayName = 'CatalogFilters';
+export const CatalogFilters = memo(CatalogFiltersComponent);

@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
+import { memo } from 'react';
 import type { CatalogQuery } from '@/models';
 import { useCatalog } from '@/hooks';
 import { useTags } from '@/queries';
@@ -11,7 +12,7 @@ import { CatalogFilters } from './catalog-filters';
 import { CatalogResults } from './catalog-results';
 
 /** Public catalog. The address holds the filters, and the server returns the page. */
-export function Catalog() {
+const CatalogComponent = function() {
   const params = useSearchParams();
   const router = useRouter();
   const query = catalogQueryFromSearchParams(params);
@@ -64,3 +65,6 @@ export function Catalog() {
     </Page>
   );
 }
+
+CatalogComponent.displayName = 'Catalog';
+export const Catalog = memo(CatalogComponent);

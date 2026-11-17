@@ -1,9 +1,10 @@
+import { memo } from 'react';
 import { Icon, Media } from '@/ui';
 import type { ProductCardVm } from '@/view-models';
 import styles from './catalog.module.css';
 
 /** One listing in the catalog. */
-export function ProductCard({ card }: { readonly card: ProductCardVm }) {
+const ProductCardComponent = function({ card }: { readonly card: ProductCardVm }) {
   return (
     <a className={styles.card} href={`/products/${card.id}`}>
       <div className={styles.cover}>{card.image ? <Media src={card.image} alt="" /> : null}</div>
@@ -23,3 +24,6 @@ export function ProductCard({ card }: { readonly card: ProductCardVm }) {
     </a>
   );
 }
+
+ProductCardComponent.displayName = 'ProductCard';
+export const ProductCard = memo(ProductCardComponent);
