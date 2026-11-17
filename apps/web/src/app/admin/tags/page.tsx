@@ -1,6 +1,10 @@
+import { memo } from 'react';
 import { AdminTagsPage } from '@/views';
 
 /** Tag administration route. */
-export default function Page() {
+const PageComponent = function() {
   return <AdminTagsPage />;
 }
+
+PageComponent.displayName = 'Page';
+export default memo(PageComponent);

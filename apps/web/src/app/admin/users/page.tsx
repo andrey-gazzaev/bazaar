@@ -1,6 +1,10 @@
+import { memo } from 'react';
 import { AdminUsersPage } from '@/views';
 
 /** Account administration route. */
-export default function Page() {
+const PageComponent = function() {
   return <AdminUsersPage />;
 }
+
+PageComponent.displayName = 'Page';
+export default memo(PageComponent);

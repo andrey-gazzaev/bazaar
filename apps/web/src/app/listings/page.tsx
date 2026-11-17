@@ -1,6 +1,10 @@
+import { memo } from 'react';
 import { ListingsPage } from '@/views';
 
 /** Seller listings route. */
-export default function Page() {
+const PageComponent = function() {
   return <ListingsPage />;
 }
+
+PageComponent.displayName = 'Page';
+export default memo(PageComponent);

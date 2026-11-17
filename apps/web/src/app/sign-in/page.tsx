@@ -1,6 +1,10 @@
+import { memo } from 'react';
 import { SignInPage } from '@/views';
 
 /** Sign-in route. */
-export default function Page() {
+const PageComponent = function() {
   return <SignInPage />;
 }
+
+PageComponent.displayName = 'Page';
+export default memo(PageComponent);

@@ -1,6 +1,10 @@
+import { memo } from 'react';
 import { SignUpPage } from '@/views';
 
 /** Registration route. */
-export default function Page() {
+const PageComponent = function() {
   return <SignUpPage />;
 }
+
+PageComponent.displayName = 'Page';
+export default memo(PageComponent);

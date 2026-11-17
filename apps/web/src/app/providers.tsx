@@ -1,13 +1,13 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState, type ReactNode } from 'react';
+import { memo, useState, type ReactNode } from 'react';
 import { SessionProvider } from '@/context';
 import type { SessionUser } from '@/models';
 import { sessionKeys } from '@/queries/session/keys';
 
 /** Query cache and the signed-in person. */
-export function Providers({
+const ProvidersComponent = function({
   user,
   children,
 }: {
@@ -35,3 +35,6 @@ export function Providers({
     </QueryClientProvider>
   );
 }
+
+ProvidersComponent.displayName = 'Providers';
+export const Providers = memo(ProvidersComponent);
