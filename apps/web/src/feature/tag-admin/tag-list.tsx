@@ -1,9 +1,10 @@
+import { memo } from 'react';
 import type { Tag } from '@/models';
 import { Button } from '@/ui';
 import styles from './tag-admin.module.css';
 
 /** Tags an admin can rename or remove. */
-export function TagList({
+const TagListComponent = function({
   tags,
   onEdit,
   onDelete,
@@ -32,3 +33,6 @@ export function TagList({
     </div>
   );
 }
+
+TagListComponent.displayName = 'TagList';
+export const TagList = memo(TagListComponent);
