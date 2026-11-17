@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useSessionContext } from '@/context';
 import { useModerationQueue } from '@/hooks';
 import { useApproveProduct, useRejectProduct } from '@/queries';
@@ -9,7 +9,7 @@ import { ModerationList } from './moderation-list';
 import styles from './moderation.module.css';
 
 /** Pending listings an admin can approve or reject. */
-export function Moderation() {
+const ModerationComponent = function() {
   const session = useSessionContext();
   const { items, isLoading, error } = useModerationQueue();
   const approve = useApproveProduct();
@@ -66,3 +66,6 @@ export function Moderation() {
     </Page>
   );
 }
+
+ModerationComponent.displayName = 'Moderation';
+export const Moderation = memo(ModerationComponent);

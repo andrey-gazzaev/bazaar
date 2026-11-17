@@ -1,9 +1,10 @@
+import { memo } from 'react';
 import { Button } from '@/ui';
 import type { ModerationItemVm } from '@/view-models';
 import styles from './moderation-list.module.css';
 
 /** Pending cards and the two review actions. */
-export function ModerationList({
+const ModerationListComponent = function({
   items,
   pendingId,
   onApprove,
@@ -47,3 +48,6 @@ export function ModerationList({
     </ul>
   );
 }
+
+ModerationListComponent.displayName = 'ModerationList';
+export const ModerationList = memo(ModerationListComponent);
