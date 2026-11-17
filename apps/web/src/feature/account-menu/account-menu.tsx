@@ -1,5 +1,6 @@
 'use client';
 
+import { memo, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 import { useSessionContext } from '@/context';
 import { Icon, NavItem } from '@/ui';
@@ -10,15 +11,15 @@ function catalogSelected(pathname: string): boolean {
 }
 
 /** Links for the signed-in role. Guests get sign-in and registration. */
-export function AccountMenu() {
+const AccountMenuComponent = function() {
   const session = useSessionContext();
   const pathname = usePathname();
 
-  const catalog = (
+  const catalog = useMemo(() => (
     <NavItem href="/" selected={catalogSelected(pathname)} icon={<Icon name="grid" />}>
       Каталог
     </NavItem>
-  );
+  ), [pathname]);
 
   if (!session.user) {
     return (
@@ -77,3 +78,6 @@ export function AccountMenu() {
     </div>
   );
 }
+
+AccountMenuComponent.displayName = 'AccountMenu';
+export const AccountMenu = memo(AccountMenuComponent);
