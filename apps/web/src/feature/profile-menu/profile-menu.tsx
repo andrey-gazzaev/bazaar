@@ -1,14 +1,14 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useSessionContext } from '@/context';
 import { useSignOut } from '@/queries';
 import { Button } from '@/ui';
 import styles from './profile-menu.module.css';
 
 /** The signed-in person's name, settings, and sign-out. */
-export function ProfileMenu() {
+const ProfileMenuComponent = function() {
   const session = useSessionContext();
   const signOut = useSignOut();
   const router = useRouter();
@@ -43,3 +43,6 @@ export function ProfileMenu() {
     </div>
   );
 }
+
+ProfileMenuComponent.displayName = 'ProfileMenu';
+export const ProfileMenu = memo(ProfileMenuComponent);
