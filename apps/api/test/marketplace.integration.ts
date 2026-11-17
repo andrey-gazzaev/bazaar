@@ -6,6 +6,7 @@ import { execSync } from 'node:child_process';
 import { join } from 'node:path';
 import { Client } from 'pg';
 import request, { type Agent } from 'supertest';
+import { USER_COOKIE } from '../src/common/session';
 import { createApp } from '../src/create-app';
 
 const repoRoot = join(__dirname, '../../..');
@@ -58,12 +59,19 @@ describe('marketplace', () => {
 
     expect(created.status).toBe(201);
     expect(created.body.user).toMatchObject({ email: 'new@bazaar.dev', name: 'Новый', role: 'CLIENT' });
+    expect(JSON.parse(userCookie(created.headers['set-cookie']) ?? '')).toMatchObject({
+      email: 'new@bazaar.dev',
+      name: 'Новый',
+      role: 'CLIENT',
+    });
+    expect(userCookieLine(created.headers['set-cookie'])?.toLowerCase()).toContain('httponly');
 
     const session = await guest.get('/api/auth/session');
     expect(session.status).toBe(200);
     expect(session.body.user.email).toBe('new@bazaar.dev');
 
-    await guest.post('/api/auth/logout').expect(200);
+    const left = await guest.post('/api/auth/logout').expect(200);
+    expect(userCookie(left.headers['set-cookie'])).toBe('');
 
     const after = await guest.get('/api/auth/session');
     expect(after.body.user).toBeNull();
@@ -304,6 +312,19 @@ describe('marketplace', () => {
     return created.body.product.id as string;
   }
 });
+
+function userCookieLine(raw: string | string[] | undefined): string | null {
+  const lines = Array.isArray(raw) ? raw : typeof raw === 'string' ? [raw] : [];
+  return lines.find((line) => line.startsWith(`${USER_COOKIE}=`)) ?? null;
+}
+
+function userCookie(raw: string | string[] | undefined): string | null {
+  const line = userCookieLine(raw);
+  if (!line) return null;
+
+  const pair = line.split(';')[0] ?? '';
+  return decodeURIComponent(pair.slice(USER_COOKIE.length + 1));
+}
 
 async function ensureTestDatabase(): Promise<void> {
   const client = new Client({
