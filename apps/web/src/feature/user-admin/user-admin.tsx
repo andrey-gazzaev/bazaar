@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useSessionContext } from '@/context';
 import { useUserRows } from '@/hooks';
 import { mapUserDraft } from '@/mappers';
@@ -14,7 +14,7 @@ import { UserTable } from './user-table';
 const blank: UserDraft = { name: '', email: '', password: '', role: 'CLIENT' };
 
 /** Admin list and editor for accounts. */
-export function UserAdmin() {
+const UserAdminComponent = function() {
   const session = useSessionContext();
   const { rows, isLoading } = useUserRows();
   const createUser = useCreateUser();
@@ -113,3 +113,6 @@ export function UserAdmin() {
     </Page>
   );
 }
+
+UserAdminComponent.displayName = 'UserAdmin';
+export const UserAdmin = memo(UserAdminComponent);

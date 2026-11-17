@@ -1,12 +1,12 @@
 'use client';
 
-import type { FormEvent } from 'react';
+import { memo, type FormEvent } from 'react';
 import type { Role, UserDraft } from '@/models';
 import { Button, SelectField, TextField } from '@/ui';
 import styles from './user-admin.module.css';
 
 /** Fields for creating or changing an account. */
-export function UserForm({
+const UserFormComponent = function({
   draft,
   editing,
   pending,
@@ -79,3 +79,6 @@ export function UserForm({
     </form>
   );
 }
+
+UserFormComponent.displayName = 'UserForm';
+export const UserForm = memo(UserFormComponent);
