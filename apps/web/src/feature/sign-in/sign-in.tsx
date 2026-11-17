@@ -1,14 +1,14 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, type FormEvent } from 'react';
+import { memo, useEffect, useState, type FormEvent } from 'react';
 import { useSessionContext } from '@/context';
 import { useSignIn } from '@/queries';
 import { Breadcrumb, Button, Page, Panel, TextField } from '@/ui';
 import styles from './sign-in.module.css';
 
 /** Email and password form. */
-export function SignIn() {
+const SignInComponent = function() {
   const signIn = useSignIn();
   const session = useSessionContext();
   const router = useRouter();
@@ -92,3 +92,6 @@ export function SignIn() {
     </Page>
   );
 }
+
+SignInComponent.displayName = 'SignIn';
+export const SignIn = memo(SignInComponent);
