@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useSessionContext } from '@/context';
 import { useCart } from '@/hooks';
 import { formatPrice, formatStock } from '@/services';
@@ -11,7 +11,7 @@ import styles from './product-screen.module.css';
 import { ProductGallery } from './product-gallery';
 
 /** One listing: its pictures, price, and the current person's actions. */
-export function ProductScreen({
+const ProductScreenComponent = function({
   productId,
 }: {
   /** Listing to show. */
@@ -146,3 +146,6 @@ export function ProductScreen({
     </Page>
   );
 }
+
+ProductScreenComponent.displayName = 'ProductScreen';
+export const ProductScreen = memo(ProductScreenComponent);

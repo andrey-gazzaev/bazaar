@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Media } from '@/ui';
 import styles from './product-gallery.module.css';
 
 /** Pictures for one listing. The frame stays empty when there are no pictures. */
-export function ProductGallery({
+const ProductGalleryComponent = function({
   name,
   images,
 }: {
@@ -44,3 +44,6 @@ export function ProductGallery({
     </div>
   );
 }
+
+ProductGalleryComponent.displayName = 'ProductGallery';
+export const ProductGallery = memo(ProductGalleryComponent);
