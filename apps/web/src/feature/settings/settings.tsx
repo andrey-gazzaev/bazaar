@@ -1,12 +1,13 @@
 'use client';
 
+import { memo } from 'react';
 import { useSessionContext } from '@/context';
 import { formatRole } from '@/services';
 import { Page, Panel } from '@/ui';
 import styles from './settings.module.css';
 
 /** Name, email, and role. Nothing here can be edited. */
-export function Settings() {
+const SettingsComponent = function() {
   const session = useSessionContext();
 
   if (!session.user) {
@@ -45,3 +46,6 @@ export function Settings() {
     </Page>
   );
 }
+
+SettingsComponent.displayName = 'Settings';
+export const Settings = memo(SettingsComponent);
