@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import type { ComponentProps } from 'react';
+import { memo, type ComponentProps } from 'react';
 import styles from './button.module.css';
 
 type ButtonProps = {
@@ -17,7 +17,7 @@ type ButtonProps = {
 );
 
 /** Action control. Primary is filled, ghost is quiet, danger is destructive. It is a link when href is set. */
-export function Button({ variant = 'primary', className, ...props }: ButtonProps) {
+const ButtonComponent = function({ variant = 'primary', className, ...props }: ButtonProps) {
   const tone = variant === 'ghost' ? styles.ghost : variant === 'danger' ? styles.danger : styles.primary;
 
   if (props.href !== undefined) {
@@ -28,3 +28,6 @@ export function Button({ variant = 'primary', className, ...props }: ButtonProps
 
   return <button type={type} className={clsx(tone, className)} {...buttonProps} />;
 }
+
+ButtonComponent.displayName = 'Button';
+export const Button = memo(ButtonComponent);

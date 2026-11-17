@@ -1,8 +1,8 @@
-import type { ReactNode } from 'react';
+import { memo, type ReactNode } from 'react';
 import styles from './sidebar.module.css';
 
 /** Vertical card. The brand slot is accent-colored, and the caller supplies what sits under it. */
-export function Sidebar({
+const SidebarComponent = function({
   brand,
   children,
 }: {
@@ -20,3 +20,6 @@ export function Sidebar({
     </aside>
   );
 }
+
+SidebarComponent.displayName = 'Sidebar';
+export const Sidebar = memo(SidebarComponent);

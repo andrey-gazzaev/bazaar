@@ -1,9 +1,9 @@
 import clsx from 'clsx';
-import type { ComponentProps, ReactNode } from 'react';
+import { memo, type ComponentProps, type ReactNode } from 'react';
 import styles from './field.module.css';
 
 /** Single-line text input. The caption and inner adornment are optional. */
-export function TextField({
+const TextFieldComponent = function({
   className,
   label,
   adornment,
@@ -44,3 +44,6 @@ export function TextField({
     </label>
   );
 }
+
+TextFieldComponent.displayName = 'TextField';
+export const TextField = memo(TextFieldComponent);

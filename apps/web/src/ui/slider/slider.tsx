@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import styles from './slider.module.css';
 
 /** Numeric range. The caller supplies the printed value. */
-export function Slider({
+const SliderComponent = function({
   label,
   min,
   max,
@@ -42,3 +43,6 @@ export function Slider({
     </label>
   );
 }
+
+SliderComponent.displayName = 'Slider';
+export const Slider = memo(SliderComponent);

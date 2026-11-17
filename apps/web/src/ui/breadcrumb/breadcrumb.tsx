@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, memo } from 'react';
 import styles from './breadcrumb.module.css';
 
 /** One step in a breadcrumb trail. */
@@ -11,7 +11,7 @@ export type Crumb = {
 };
 
 /** Trail of page names. The last step is the current page when it has no address. */
-export function Breadcrumb({
+const BreadcrumbComponent = function({
   items,
 }: {
   /** Steps from the root to the current page. Empty when there is nowhere to show. */
@@ -38,3 +38,6 @@ export function Breadcrumb({
     </nav>
   );
 }
+
+BreadcrumbComponent.displayName = 'Breadcrumb';
+export const Breadcrumb = memo(BreadcrumbComponent);

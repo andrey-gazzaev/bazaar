@@ -1,9 +1,9 @@
 import clsx from 'clsx';
-import type { ComponentProps } from 'react';
+import { memo, type ComponentProps } from 'react';
 import styles from './chip.module.css';
 
 /** Choice button. Selected is filled; otherwise it is white with a border. */
-export function Chip({
+const ChipComponent = function({
   selected = false,
   className,
   type = 'button',
@@ -14,3 +14,6 @@ export function Chip({
 }) {
   return <button type={type} className={clsx(styles.chip, selected && styles.selected, className)} {...props} />;
 }
+
+ChipComponent.displayName = 'Chip';
+export const Chip = memo(ChipComponent);

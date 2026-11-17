@@ -1,9 +1,9 @@
 import clsx from 'clsx';
-import type { ReactNode } from 'react';
+import { memo, type ReactNode } from 'react';
 import styles from './nav-item.module.css';
 
 /** Link in a vertical nav. Selected is a solid accent pill. */
-export function NavItem({
+const NavItemComponent = function({
   href,
   selected = false,
   icon,
@@ -28,3 +28,6 @@ export function NavItem({
     </a>
   );
 }
+
+NavItemComponent.displayName = 'NavItem';
+export const NavItem = memo(NavItemComponent);

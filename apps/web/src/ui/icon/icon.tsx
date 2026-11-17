@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { memo, type ReactNode } from 'react';
 import styles from './icon.module.css';
 
 /** Name of a decorative line icon. */
@@ -41,7 +41,7 @@ const figures: Record<IconName, ReactNode> = {
 };
 
 /** Decorative line icon. Hidden from assistive technology. */
-export function Icon({
+const IconComponent = function({
   name,
 }: {
   /** Which icon to show. */
@@ -62,3 +62,6 @@ export function Icon({
     </svg>
   );
 }
+
+IconComponent.displayName = 'Icon';
+export const Icon = memo(IconComponent);

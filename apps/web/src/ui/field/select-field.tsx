@@ -1,9 +1,9 @@
 import clsx from 'clsx';
-import type { ComponentProps } from 'react';
+import { memo, type ComponentProps } from 'react';
 import styles from './field.module.css';
 
 /** Single-choice dropdown. The caption is optional. */
-export function SelectField({
+const SelectFieldComponent = function({
   className,
   label,
   ...props
@@ -25,3 +25,6 @@ export function SelectField({
     </label>
   );
 }
+
+SelectFieldComponent.displayName = 'SelectField';
+export const SelectField = memo(SelectFieldComponent);

@@ -1,9 +1,9 @@
 import clsx from 'clsx';
-import type { ComponentProps } from 'react';
+import { memo, type ComponentProps } from 'react';
 import styles from './field.module.css';
 
 /** Multi-line text input. The caption is optional. */
-export function TextArea({
+const TextAreaComponent = function({
   className,
   label,
   ...props
@@ -25,3 +25,6 @@ export function TextArea({
     </label>
   );
 }
+
+TextAreaComponent.displayName = 'TextArea';
+export const TextArea = memo(TextAreaComponent);
