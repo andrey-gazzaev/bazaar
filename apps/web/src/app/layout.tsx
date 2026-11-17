@@ -1,4 +1,6 @@
+import { cookies } from 'next/headers';
 import type { ReactNode } from 'react';
+import { readSessionUser } from '@/dtos/schemas/session/read-session-user';
 import { Frame } from './frame';
 import { Providers } from './providers';
 import './global.css';
@@ -10,11 +12,14 @@ export const metadata = {
 };
 
 /** Root document. */
-export default function RootLayout({ children }: { readonly children: ReactNode }) {
+export default async function RootLayout({ children }: { readonly children: ReactNode }) {
+  const jar = await cookies();
+  const user = readSessionUser(jar.get('bazaar_user')?.value ?? null);
+
   return (
     <html lang="ru">
       <body>
-        <Providers>
+        <Providers user={user}>
           <Frame>{children}</Frame>
         </Providers>
       </body>

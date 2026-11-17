@@ -11,7 +11,6 @@ vi.mock('@/dtos/api/session/session.api', () => ({
 
 describe('SignIn integration', () => {
   beforeEach(() => {
-    vi.mocked(sessionApi.current).mockResolvedValue(null);
     vi.mocked(sessionApi.login).mockResolvedValue({
       id: 'c1',
       email: 'client@bazaar.dev',

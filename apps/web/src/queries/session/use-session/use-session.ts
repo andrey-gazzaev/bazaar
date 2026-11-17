@@ -7,5 +7,6 @@ export function useSession() {
   return useQuery({
     queryKey: sessionKeys.all,
     queryFn: () => sessionApi.current(),
+    enabled: false,
   });
 }

@@ -14,8 +14,6 @@ export function AccountMenu() {
   const session = useSessionContext();
   const pathname = usePathname();
 
-  if (session.isLoading) return <span className="muted">…</span>;
-
   const catalog = (
     <NavItem href="/" selected={catalogSelected(pathname)} icon={<Icon name="grid" />}>
       Каталог

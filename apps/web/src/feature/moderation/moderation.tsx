@@ -17,8 +17,6 @@ export function Moderation() {
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
 
-  if (session.isLoading) return <Page><p className="muted">Загрузка…</p></Page>;
-
   if (session.user?.role !== 'ADMIN') {
     return (
       <Page>

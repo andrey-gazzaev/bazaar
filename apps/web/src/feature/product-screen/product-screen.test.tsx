@@ -2,9 +2,15 @@ import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { cartApi } from '@/dtos/api/cart/cart.api';
 import { productApi } from '@/dtos/api/product/product.api';
-import { sessionApi } from '@/dtos/api/session/session.api';
 import { renderShop } from '@/test/render-shop';
 import { ProductScreen } from './product-screen';
+
+const seller = {
+  id: 's1',
+  email: 'seller@bazaar.dev',
+  name: 'Продавец',
+  role: 'SELLER',
+} as const;
 
 vi.mock('@/dtos/api/session/session.api', () => ({
   sessionApi: { current: vi.fn(), login: vi.fn(), register: vi.fn(), leave: vi.fn() },
@@ -30,12 +36,6 @@ vi.mock('@/dtos/api/cart/cart.api', () => ({
 
 describe('ProductScreen', () => {
   beforeEach(() => {
-    vi.mocked(sessionApi.current).mockResolvedValue({
-      id: 's1',
-      email: 'seller@bazaar.dev',
-      name: 'Продавец',
-      role: 'SELLER',
-    });
     vi.mocked(cartApi.list).mockResolvedValue([]);
     vi.mocked(productApi.load).mockResolvedValue({
       id: 'p1',
@@ -52,7 +52,7 @@ describe('ProductScreen', () => {
   });
 
   it('does not offer the cart for a hidden card', async () => {
-    renderShop(<ProductScreen productId="p1" />);
+    renderShop(<ProductScreen productId="p1" />, seller);
 
     expect(await screen.findByRole('heading', { name: 'Льняная сумка' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'В корзину' })).not.toBeInTheDocument();

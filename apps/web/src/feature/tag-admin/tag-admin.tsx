@@ -19,8 +19,6 @@ export function TagAdmin() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  if (session.isLoading) return <Page><p className="muted">Загрузка…</p></Page>;
-
   if (session.user?.role !== 'ADMIN') {
     return (
       <Page>

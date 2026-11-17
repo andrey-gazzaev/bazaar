@@ -26,7 +26,7 @@ export function ProductScreen({
   const [added, setAdded] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (product.isLoading || session.isLoading) return <Page><p className="muted">Загрузка…</p></Page>;
+  if (product.isLoading) return <Page><p className="muted">Загрузка…</p></Page>;
 
   if (product.error || !product.data) {
     const message = product.error instanceof Error ? product.error.message : 'Товар не найден';

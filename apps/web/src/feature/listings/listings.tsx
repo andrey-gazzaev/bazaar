@@ -23,8 +23,6 @@ export function Listings() {
   const [editing, setEditing] = useState<ListingVm | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
 
-  if (session.isLoading) return <Page><p className="muted">Загрузка…</p></Page>;
-
   if (session.user?.role !== 'SELLER') {
     return (
       <Page>

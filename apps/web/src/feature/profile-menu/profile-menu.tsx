@@ -14,7 +14,7 @@ export function ProfileMenu() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
-  if (session.isLoading || !session.user) return null;
+  if (!session.user) return null;
 
   async function leave() {
     await signOut.mutateAsync();

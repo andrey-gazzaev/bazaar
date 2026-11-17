@@ -3,9 +3,15 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { cartApi } from '@/dtos/api/cart/cart.api';
 import { orderApi } from '@/dtos/api/order/order.api';
-import { sessionApi } from '@/dtos/api/session/session.api';
 import { renderShop } from '@/test/render-shop';
 import { Cart } from './cart';
+
+const shopper = {
+  id: 'c1',
+  email: 'client@bazaar.dev',
+  name: 'Клиент',
+  role: 'CLIENT',
+} as const;
 
 vi.mock('@/dtos/api/session/session.api', () => ({
   sessionApi: { current: vi.fn(), login: vi.fn(), register: vi.fn(), leave: vi.fn() },
@@ -21,12 +27,6 @@ vi.mock('@/dtos/api/order/order.api', () => ({
 
 describe('Cart integration', () => {
   beforeEach(() => {
-    vi.mocked(sessionApi.current).mockResolvedValue({
-      id: 'c1',
-      email: 'client@bazaar.dev',
-      name: 'Клиент',
-      role: 'CLIENT',
-    });
     vi.mocked(cartApi.list).mockResolvedValue([
       {
         productId: 'p1',
@@ -54,7 +54,7 @@ describe('Cart integration', () => {
   it('shows the total before the mock purchase and stores the delivery details', async () => {
     const user = userEvent.setup();
 
-    renderShop(<Cart />);
+    renderShop(<Cart />, shopper);
 
     expect(await screen.findByRole('heading', { name: 'Корзина' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Адрес доставки' })).toBeInTheDocument();
@@ -122,7 +122,7 @@ describe('Cart integration', () => {
       },
     ]);
 
-    renderShop(<Cart />);
+    renderShop(<Cart />, shopper);
 
     expect(await screen.findByText(/6\s980\s₽/)).toBeInTheDocument();
 

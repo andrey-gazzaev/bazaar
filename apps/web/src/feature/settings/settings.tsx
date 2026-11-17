@@ -9,8 +9,6 @@ import styles from './settings.module.css';
 export function Settings() {
   const session = useSessionContext();
 
-  if (session.isLoading) return <Page><p className="muted">Загрузка…</p></Page>;
-
   if (!session.user) {
     return (
       <Page>

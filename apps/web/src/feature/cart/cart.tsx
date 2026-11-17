@@ -16,8 +16,6 @@ export function Cart() {
   const [orders, setOrders] = useState<readonly Order[] | null>(null);
   const [lineError, setLineError] = useState<string | null>(null);
 
-  if (session.isLoading) return <Page><p className="muted">Загрузка…</p></Page>;
-
   if (!session.user) {
     return (
       <Page>
