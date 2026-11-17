@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useSessionContext } from '@/context';
 import { useMyListings } from '@/hooks';
 import type { NewProduct } from '@/models';
@@ -12,7 +12,7 @@ import { ListingList } from './listing-list';
 import styles from './listings.module.css';
 
 /** A seller's own cards: add, edit, and delete. */
-export function Listings() {
+const ListingsComponent = function() {
   const session = useSessionContext();
   const { listings, isLoading, error } = useMyListings();
   const tags = useTags();
@@ -126,3 +126,6 @@ export function Listings() {
     </Page>
   );
 }
+
+ListingsComponent.displayName = 'Listings';
+export const Listings = memo(ListingsComponent);

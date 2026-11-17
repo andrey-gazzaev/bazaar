@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { memo, useState, type FormEvent } from 'react';
 import type { NewProduct, Tag } from '@/models';
 import { Button, TextArea, TextField } from '@/ui';
 import styles from './listing-fields.module.css';
 
 /** Fields for a listing: name, description, price, stock, tags, and pictures. */
-export function ListingFields({
+const ListingFieldsComponent = function({
   tags,
   pending,
   requireImages,
@@ -153,3 +153,6 @@ export function ListingFields({
     </form>
   );
 }
+
+ListingFieldsComponent.displayName = 'ListingFields';
+export const ListingFields = memo(ListingFieldsComponent);

@@ -1,9 +1,10 @@
+import { memo } from 'react';
 import { Button } from '@/ui';
 import type { ListingVm } from '@/view-models';
 import styles from './listing-list.module.css';
 
 /** The seller's cards, each with its review state. */
-export function ListingList({
+const ListingListComponent = function({
   listings,
   onEdit,
   onDelete,
@@ -44,3 +45,6 @@ export function ListingList({
     </ul>
   );
 }
+
+ListingListComponent.displayName = 'ListingList';
+export const ListingList = memo(ListingListComponent);
