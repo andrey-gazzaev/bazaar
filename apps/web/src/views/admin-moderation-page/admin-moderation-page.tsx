@@ -1,8 +1,12 @@
 'use client';
 
+import { memo } from 'react';
 import { Moderation } from '@/feature';
 
 /** Review queue. */
-export function AdminModerationPage() {
+const AdminModerationPageComponent = function() {
   return <Moderation />;
 }
+
+AdminModerationPageComponent.displayName = 'AdminModerationPage';
+export const AdminModerationPage = memo(AdminModerationPageComponent);

@@ -1,8 +1,12 @@
 'use client';
 
+import { memo } from 'react';
 import { TagAdmin } from '@/feature';
 
 /** Tag administration. */
-export function AdminTagsPage() {
+const AdminTagsPageComponent = function() {
   return <TagAdmin />;
 }
+
+AdminTagsPageComponent.displayName = 'AdminTagsPage';
+export const AdminTagsPage = memo(AdminTagsPageComponent);

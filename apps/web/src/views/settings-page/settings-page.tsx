@@ -1,8 +1,12 @@
 'use client';
 
+import { memo } from 'react';
 import { Settings } from '@/feature';
 
 /** Account details. */
-export function SettingsPage() {
+const SettingsPageComponent = function() {
   return <Settings />;
 }
+
+SettingsPageComponent.displayName = 'SettingsPage';
+export const SettingsPage = memo(SettingsPageComponent);

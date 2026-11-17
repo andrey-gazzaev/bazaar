@@ -1,8 +1,12 @@
 'use client';
 
+import { memo } from 'react';
 import { ProductScreen } from '@/feature';
 
 /** One listing. */
-export function ProductPage({ productId }: { readonly productId: string }) {
+const ProductPageComponent = function({ productId }: { readonly productId: string }) {
   return <ProductScreen productId={productId} />;
 }
+
+ProductPageComponent.displayName = 'ProductPage';
+export const ProductPage = memo(ProductPageComponent);

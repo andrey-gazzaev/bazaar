@@ -1,8 +1,12 @@
 'use client';
 
+import { memo } from 'react';
 import { UserAdmin } from '@/feature';
 
 /** Account administration. */
-export function AdminUsersPage() {
+const AdminUsersPageComponent = function() {
   return <UserAdmin />;
 }
+
+AdminUsersPageComponent.displayName = 'AdminUsersPage';
+export const AdminUsersPage = memo(AdminUsersPageComponent);
