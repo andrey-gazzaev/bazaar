@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, type FormEvent } from 'react';
+import { memo, useEffect, useState, type FormEvent } from 'react';
 import { useSessionContext } from '@/context';
 import type { RegisterInput } from '@/models';
 import { useSignUp } from '@/queries';
@@ -9,7 +9,7 @@ import { Button, Page, Panel, SelectField, TextField } from '@/ui';
 import styles from './sign-up.module.css';
 
 /** Registration for a client or a seller. */
-export function SignUp() {
+const SignUpComponent = function() {
   const signUp = useSignUp();
   const session = useSessionContext();
   const router = useRouter();
@@ -104,3 +104,6 @@ export function SignUp() {
     </Page>
   );
 }
+
+SignUpComponent.displayName = 'SignUp';
+export const SignUp = memo(SignUpComponent);
