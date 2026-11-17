@@ -1,9 +1,10 @@
+import { memo } from 'react';
 import type { CartVm } from '@/view-models';
 import { Button, Media, Panel } from '@/ui';
 import styles from './order-summary.module.css';
 
 /** Every cart line, the free delivery, and the control that places the order. */
-export function OrderSummary({
+const OrderSummaryComponent = function({
   cart,
   pending,
   onQuantity,
@@ -88,3 +89,6 @@ export function OrderSummary({
     </Panel>
   );
 }
+
+OrderSummaryComponent.displayName = 'OrderSummary';
+export const OrderSummary = memo(OrderSummaryComponent);

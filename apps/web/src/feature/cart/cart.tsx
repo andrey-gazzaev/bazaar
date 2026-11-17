@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useSessionContext } from '@/context';
 import { useCart } from '@/hooks';
 import type { Order } from '@/models';
@@ -10,7 +10,7 @@ import { CheckoutForm } from './checkout-form';
 import styles from './cart.module.css';
 
 /** Cart quantities and one checkout for every line. */
-export function Cart() {
+const CartComponent = function() {
   const session = useSessionContext();
   const { cart, isLoading, error, isCheckingOut, setCartItem, removeCartItem, checkout } = useCart();
   const [orders, setOrders] = useState<readonly Order[] | null>(null);
@@ -103,3 +103,6 @@ export function Cart() {
     </Page>
   );
 }
+
+CartComponent.displayName = 'Cart';
+export const Cart = memo(CartComponent);

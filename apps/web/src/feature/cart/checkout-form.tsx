@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { memo, useState, type FormEvent } from 'react';
 import type { Shipping } from '@/models';
 import { Panel, SelectField, TextField } from '@/ui';
 import type { CartVm } from '@/view-models';
@@ -48,7 +48,7 @@ function maskPhone(raw: string): string {
 }
 
 /** Address and the cart summary. */
-export function CheckoutForm({
+const CheckoutFormComponent = function({
   cart,
   pending,
   onSubmit,
@@ -152,3 +152,6 @@ export function CheckoutForm({
     </form>
   );
 }
+
+CheckoutFormComponent.displayName = 'CheckoutForm';
+export const CheckoutForm = memo(CheckoutFormComponent);
