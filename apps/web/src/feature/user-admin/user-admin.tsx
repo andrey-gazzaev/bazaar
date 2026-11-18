@@ -1,10 +1,9 @@
 'use client';
 
 import { memo, useState } from 'react';
-import { useSessionContext } from '@/context';
 import { useUserRows } from '@/hooks';
 import { mapUserDraft } from '@/mappers';
-import type { UserDraft } from '@/models';
+import type { SessionUser, UserDraft } from '@/models';
 import { useCreateUser, useDeleteUser, useUpdateUser } from '@/queries';
 import { Page, Panel } from '@/ui';
 import styles from './user-admin.module.css';
@@ -14,8 +13,12 @@ import { UserTable } from './user-table';
 const blank: UserDraft = { name: '', email: '', password: '', role: 'CLIENT' };
 
 /** Admin list and editor for accounts. */
-const UserAdminComponent = function() {
-  const session = useSessionContext();
+const UserAdminComponent = function({
+  user,
+}: {
+  /** Person from the user cookie. Null when nobody is signed in. */
+  readonly user: SessionUser | null;
+}) {
   const { rows, isLoading } = useUserRows();
   const createUser = useCreateUser();
   const updateUser = useUpdateUser();
@@ -24,7 +27,7 @@ const UserAdminComponent = function() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  if (session.user?.role !== 'ADMIN') {
+  if (user?.role !== 'ADMIN') {
     return (
       <Page>
         <Panel>

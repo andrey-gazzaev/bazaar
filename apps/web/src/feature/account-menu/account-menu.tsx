@@ -1,83 +1,9 @@
-'use client';
-
-import { memo, useMemo } from 'react';
-import { usePathname } from 'next/navigation';
-import { useSessionContext } from '@/context';
-import { Icon, NavItem } from '@/ui';
-import styles from './account-menu.module.css';
-
-function catalogSelected(pathname: string): boolean {
-  return pathname === '/' || pathname === '/products' || pathname.startsWith('/products/');
-}
+import { getSessionUser } from '@/services/get-session-user';
+import { AccountMenuNav } from './account-menu-nav';
 
 /** Links for the signed-in role. Guests get sign-in and registration. */
-const AccountMenuComponent = function() {
-  const session = useSessionContext();
-  const pathname = usePathname();
+export async function AccountMenu() {
+  const user = await getSessionUser();
 
-  const catalog = useMemo(() => (
-    <NavItem href="/" selected={catalogSelected(pathname)} icon={<Icon name="grid" />}>
-      Каталог
-    </NavItem>
-  ), [pathname]);
-
-  if (!session.user) {
-    return (
-      <div className={styles.menu}>
-        {catalog}
-
-        <div className={styles.guest}>
-          <NavItem href="/sign-in" selected={pathname === '/sign-in'} icon={<Icon name="key" />}>
-            Войти
-          </NavItem>
-          <NavItem href="/sign-up" selected={pathname === '/sign-up'}>
-            Регистрация
-          </NavItem>
-        </div>
-      </div>
-    );
-  }
-
-  const seller = session.user.role === 'SELLER';
-  const admin = session.user.role === 'ADMIN';
-  const shopper = session.user.role !== 'ADMIN';
-
-  return (
-    <div className={styles.menu}>
-      {catalog}
-
-      {shopper ? (
-        <NavItem href="/cart" selected={pathname === '/cart'}>
-          Корзина
-        </NavItem>
-      ) : null}
-
-      {seller ? (
-        <NavItem href="/listings" selected={pathname === '/listings'} icon={<Icon name="tag" />}>
-          Мои объявления
-        </NavItem>
-      ) : null}
-
-      {admin ? (
-        <NavItem href="/admin/users" selected={pathname === '/admin/users'}>
-          Пользователи
-        </NavItem>
-      ) : null}
-
-      {admin ? (
-        <NavItem href="/admin/tags" selected={pathname === '/admin/tags'} icon={<Icon name="tag" />}>
-          Теги
-        </NavItem>
-      ) : null}
-
-      {admin ? (
-        <NavItem href="/admin/moderation" selected={pathname === '/admin/moderation'}>
-          Модерация
-        </NavItem>
-      ) : null}
-    </div>
-  );
+  return <AccountMenuNav user={user} />;
 }
-
-AccountMenuComponent.displayName = 'AccountMenu';
-export const AccountMenu = memo(AccountMenuComponent);

@@ -1,12 +1,9 @@
-'use client';
-
-import { memo } from 'react';
 import { TagAdmin } from '@/feature';
+import { getSessionUser } from '@/services/get-session-user';
 
 /** Tag administration. */
-const AdminTagsPageComponent = function() {
-  return <TagAdmin />;
-}
+export async function AdminTagsPage() {
+  const user = await getSessionUser();
 
-AdminTagsPageComponent.displayName = 'AdminTagsPage';
-export const AdminTagsPage = memo(AdminTagsPageComponent);
+  return <TagAdmin user={user} />;
+}

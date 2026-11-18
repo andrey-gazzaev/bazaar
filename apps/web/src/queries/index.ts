@@ -11,7 +11,6 @@ export { useMyProducts } from './products/use-my-products/use-my-products';
 export { useProduct } from './products/use-product/use-product';
 export { useRejectProduct } from './products/use-reject-product/use-reject-product';
 export { useUpdateProduct } from './products/use-update-product/use-update-product';
-export { useSession } from './session/use-session/use-session';
 export { useSignIn } from './session/use-sign-in/use-sign-in';
 export { useSignOut } from './session/use-sign-out/use-sign-out';
 export { useSignUp } from './session/use-sign-up/use-sign-up';

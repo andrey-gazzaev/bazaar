@@ -1,16 +1,19 @@
 'use client';
 
 import { memo } from 'react';
-import { useSessionContext } from '@/context';
+import type { SessionUser } from '@/models';
 import { formatRole } from '@/services';
 import { Page, Panel } from '@/ui';
 import styles from './settings.module.css';
 
 /** Name, email, and role. Nothing here can be edited. */
-const SettingsComponent = function() {
-  const session = useSessionContext();
-
-  if (!session.user) {
+const SettingsComponent = function({
+  user,
+}: {
+  /** Person from the user cookie. Null when nobody is signed in. */
+  readonly user: SessionUser | null;
+}) {
+  if (!user) {
     return (
       <Page>
         <Panel>
@@ -31,15 +34,15 @@ const SettingsComponent = function() {
         <dl className={styles.rows}>
           <div>
             <dt>Имя</dt>
-            <dd>{session.user.name}</dd>
+            <dd>{user.name}</dd>
           </div>
           <div>
             <dt>Email</dt>
-            <dd>{session.user.email}</dd>
+            <dd>{user.email}</dd>
           </div>
           <div>
             <dt>Роль</dt>
-            <dd>{formatRole(session.user.role)}</dd>
+            <dd>{formatRole(user.role)}</dd>
           </div>
         </dl>
       </Panel>

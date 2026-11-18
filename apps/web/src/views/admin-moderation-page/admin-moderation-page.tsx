@@ -1,12 +1,9 @@
-'use client';
-
-import { memo } from 'react';
 import { Moderation } from '@/feature';
+import { getSessionUser } from '@/services/get-session-user';
 
 /** Review queue. */
-const AdminModerationPageComponent = function() {
-  return <Moderation />;
-}
+export async function AdminModerationPage() {
+  const user = await getSessionUser();
 
-AdminModerationPageComponent.displayName = 'AdminModerationPage';
-export const AdminModerationPage = memo(AdminModerationPageComponent);
+  return <Moderation user={user} />;
+}

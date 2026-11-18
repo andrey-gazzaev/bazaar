@@ -1,8 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { memo, useEffect, useState, type FormEvent } from 'react';
-import { useSessionContext } from '@/context';
+import { memo, useState, type FormEvent } from 'react';
 import type { RegisterInput } from '@/models';
 import { useSignUp } from '@/queries';
 import { Button, Page, Panel, SelectField, TextField } from '@/ui';
@@ -11,17 +10,12 @@ import styles from './sign-up.module.css';
 /** Registration for a client or a seller. */
 const SignUpComponent = function() {
   const signUp = useSignUp();
-  const session = useSessionContext();
   const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<RegisterInput['role']>('CLIENT');
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (session.user) router.replace('/');
-  }, [session.user, router]);
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -37,13 +31,12 @@ const SignUpComponent = function() {
 
     try {
       await signUp.mutateAsync({ name: nextName, email: nextEmail, password, role });
+      router.refresh();
       router.push('/');
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Не удалось зарегистрироваться');
     }
   }
-
-  if (session.user) return null;
 
   return (
     <Page className={styles.column}>

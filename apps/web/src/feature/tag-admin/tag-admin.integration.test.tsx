@@ -28,7 +28,7 @@ describe('TagAdmin integration', () => {
 
   it('creates a tag from the admin form', async () => {
     const user = userEvent.setup();
-    renderShop(<TagAdmin />, admin);
+    renderShop(<TagAdmin user={admin} />);
 
     await user.type(await screen.findByPlaceholderText('Название тега'), 'Книги');
     await user.click(screen.getByRole('button', { name: 'Добавить' }));

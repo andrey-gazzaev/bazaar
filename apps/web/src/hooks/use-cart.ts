@@ -3,8 +3,8 @@ import { mapCart } from '@/mappers';
 import { useCartLines, useCheckout, useRemoveCartItem, useSetCartItem } from '@/queries';
 import type { CartVm } from '@/view-models';
 
-/** Cart, its quantity changes, and checkout. `cart` is null until the lines have loaded. */
-export function useCart(): {
+/** Cart for a client or a seller. `cart` stays null for a guest or an admin. */
+export function useCart(canShop: boolean): {
   readonly cart: CartVm | null;
   readonly isLoading: boolean;
   readonly error: Error | null;
@@ -14,7 +14,7 @@ export function useCart(): {
   readonly removeCartItem: (productId: string) => Promise<void>;
   readonly checkout: (shipping: Shipping) => Promise<readonly Order[]>;
 } {
-  const lines = useCartLines();
+  const lines = useCartLines(canShop);
   const setItem = useSetCartItem();
   const removeItem = useRemoveCartItem();
   const place = useCheckout();

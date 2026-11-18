@@ -1,12 +1,9 @@
-'use client';
-
-import { memo } from 'react';
 import { Listings } from '@/feature';
+import { getSessionUser } from '@/services/get-session-user';
 
 /** A seller's own listings. */
-const ListingsPageComponent = function() {
-  return <Listings />;
-}
+export async function ListingsPage() {
+  const user = await getSessionUser();
 
-ListingsPageComponent.displayName = 'ListingsPage';
-export const ListingsPage = memo(ListingsPageComponent);
+  return <Listings user={user} />;
+}

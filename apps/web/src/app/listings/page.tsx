@@ -1,10 +1,11 @@
-import { memo } from 'react';
+import { Suspense } from 'react';
 import { ListingsPage } from '@/views';
 
 /** Seller listings route. */
-const PageComponent = function() {
-  return <ListingsPage />;
+export default function Page() {
+  return (
+    <Suspense fallback={<p className="muted">Загрузка…</p>}>
+      <ListingsPage />
+    </Suspense>
+  );
 }
-
-PageComponent.displayName = 'Page';
-export default memo(PageComponent);

@@ -1,23 +1,27 @@
 'use client';
 
 import { memo, useState } from 'react';
-import { useSessionContext } from '@/context';
 import { useModerationQueue } from '@/hooks';
+import type { SessionUser } from '@/models';
 import { useApproveProduct, useRejectProduct } from '@/queries';
 import { Page, Panel } from '@/ui';
 import { ModerationList } from './moderation-list';
 import styles from './moderation.module.css';
 
 /** Pending listings an admin can approve or reject. */
-const ModerationComponent = function() {
-  const session = useSessionContext();
+const ModerationComponent = function({
+  user,
+}: {
+  /** Person from the user cookie. Null when nobody is signed in. */
+  readonly user: SessionUser | null;
+}) {
   const { items, isLoading, error } = useModerationQueue();
   const approve = useApproveProduct();
   const reject = useRejectProduct();
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
 
-  if (session.user?.role !== 'ADMIN') {
+  if (user?.role !== 'ADMIN') {
     return (
       <Page>
         <Panel>

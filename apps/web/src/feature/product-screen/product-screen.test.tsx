@@ -52,7 +52,7 @@ describe('ProductScreen', () => {
   });
 
   it('does not offer the cart for a hidden card', async () => {
-    renderShop(<ProductScreen productId="p1" />, seller);
+    renderShop(<ProductScreen productId="p1" user={seller} />);
 
     expect(await screen.findByRole('heading', { name: 'Льняная сумка' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'В корзину' })).not.toBeInTheDocument();

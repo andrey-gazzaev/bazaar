@@ -1,10 +1,11 @@
-import { memo } from 'react';
+import { Suspense } from 'react';
 import { AdminModerationPage } from '@/views';
 
 /** Moderation route. */
-const PageComponent = function() {
-  return <AdminModerationPage />;
+export default function Page() {
+  return (
+    <Suspense fallback={<p className="muted">Загрузка…</p>}>
+      <AdminModerationPage />
+    </Suspense>
+  );
 }
-
-PageComponent.displayName = 'Page';
-export default memo(PageComponent);

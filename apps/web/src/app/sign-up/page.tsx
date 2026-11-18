@@ -1,10 +1,11 @@
-import { memo } from 'react';
+import { Suspense } from 'react';
 import { SignUpPage } from '@/views';
 
 /** Registration route. */
-const PageComponent = function() {
-  return <SignUpPage />;
+export default function Page() {
+  return (
+    <Suspense fallback={<p className="muted">Загрузка…</p>}>
+      <SignUpPage />
+    </Suspense>
+  );
 }
-
-PageComponent.displayName = 'Page';
-export default memo(PageComponent);

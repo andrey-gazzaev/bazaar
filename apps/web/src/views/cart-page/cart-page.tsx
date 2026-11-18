@@ -1,12 +1,9 @@
-'use client';
-
-import { memo } from 'react';
 import { Cart } from '@/feature';
+import { getSessionUser } from '@/services/get-session-user';
 
 /** Cart and checkout. */
-const CartPageComponent = function() {
-  return <Cart />;
-}
+export async function CartPage() {
+  const user = await getSessionUser();
 
-CartPageComponent.displayName = 'CartPage';
-export const CartPage = memo(CartPageComponent);
+  return <Cart user={user} />;
+}

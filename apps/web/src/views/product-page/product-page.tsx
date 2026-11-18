@@ -1,12 +1,14 @@
-'use client';
-
-import { memo } from 'react';
 import { ProductScreen } from '@/feature';
+import { getSessionUser } from '@/services/get-session-user';
 
 /** One listing. */
-const ProductPageComponent = function({ productId }: { readonly productId: string }) {
-  return <ProductScreen productId={productId} />;
-}
+export async function ProductPage({
+  productId,
+}: {
+  /** Listing to show. */
+  readonly productId: string;
+}) {
+  const user = await getSessionUser();
 
-ProductPageComponent.displayName = 'ProductPage';
-export const ProductPage = memo(ProductPageComponent);
+  return <ProductScreen productId={productId} user={user} />;
+}

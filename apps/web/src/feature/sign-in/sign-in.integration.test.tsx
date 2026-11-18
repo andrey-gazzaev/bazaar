@@ -6,7 +6,7 @@ import { renderShop } from '@/test/render-shop';
 import { SignIn } from './sign-in';
 
 vi.mock('@/dtos/api/session/session.api', () => ({
-  sessionApi: { current: vi.fn(), login: vi.fn(), register: vi.fn(), leave: vi.fn() },
+  sessionApi: { login: vi.fn(), register: vi.fn(), leave: vi.fn() },
 }));
 
 describe('SignIn integration', () => {

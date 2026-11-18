@@ -1,12 +1,12 @@
-'use client';
-
-import { memo } from 'react';
+import { redirect } from 'next/navigation';
 import { SignIn } from '@/feature';
+import { getSessionUser } from '@/services/get-session-user';
 
 /** Sign-in screen. */
-const SignInPageComponent = function() {
+export async function SignInPage() {
+  const user = await getSessionUser();
+
+  if (user) redirect('/');
+
   return <SignIn />;
 }
-
-SignInPageComponent.displayName = 'SignInPage';
-export const SignInPage = memo(SignInPageComponent);

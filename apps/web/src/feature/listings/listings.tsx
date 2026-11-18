@@ -1,9 +1,8 @@
 'use client';
 
 import { memo, useState } from 'react';
-import { useSessionContext } from '@/context';
 import { useMyListings } from '@/hooks';
-import type { NewProduct } from '@/models';
+import type { NewProduct, SessionUser } from '@/models';
 import { useCreateProduct, useDeleteProduct, useTags, useUpdateProduct } from '@/queries';
 import { Button, Page, Panel } from '@/ui';
 import type { ListingVm } from '@/view-models';
@@ -12,8 +11,12 @@ import { ListingList } from './listing-list';
 import styles from './listings.module.css';
 
 /** A seller's own cards: add, edit, and delete. */
-const ListingsComponent = function() {
-  const session = useSessionContext();
+const ListingsComponent = function({
+  user,
+}: {
+  /** Person from the user cookie. Null when nobody is signed in. */
+  readonly user: SessionUser | null;
+}) {
   const { listings, isLoading, error } = useMyListings();
   const tags = useTags();
   const createProduct = useCreateProduct();
@@ -23,7 +26,7 @@ const ListingsComponent = function() {
   const [editing, setEditing] = useState<ListingVm | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
 
-  if (session.user?.role !== 'SELLER') {
+  if (user?.role !== 'SELLER') {
     return (
       <Page>
         <Panel>

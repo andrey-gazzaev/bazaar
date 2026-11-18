@@ -1,22 +1,27 @@
 'use client';
 
 import { memo, useState } from 'react';
-import { useSessionContext } from '@/context';
 import { useCart } from '@/hooks';
-import type { Order } from '@/models';
+import type { Order, SessionUser } from '@/models';
 import { formatPrice } from '@/services';
 import { Page, Panel } from '@/ui';
 import { CheckoutForm } from './checkout-form';
 import styles from './cart.module.css';
 
 /** Cart quantities and one checkout for every line. */
-const CartComponent = function() {
-  const session = useSessionContext();
-  const { cart, isLoading, error, isCheckingOut, setCartItem, removeCartItem, checkout } = useCart();
+const CartComponent = function({
+  user,
+}: {
+  /** Person from the user cookie. Null when nobody is signed in. */
+  readonly user: SessionUser | null;
+}) {
   const [orders, setOrders] = useState<readonly Order[] | null>(null);
   const [lineError, setLineError] = useState<string | null>(null);
 
-  if (!session.user) {
+  const canShop = user?.role === 'CLIENT' || user?.role === 'SELLER';
+  const { cart, isLoading, error, isCheckingOut, setCartItem, removeCartItem, checkout } = useCart(canShop);
+
+  if (!user) {
     return (
       <Page>
         <Panel>
@@ -29,7 +34,7 @@ const CartComponent = function() {
     );
   }
 
-  if (session.user.role === 'ADMIN') {
+  if (user.role === 'ADMIN') {
     return (
       <Page>
         <Panel>

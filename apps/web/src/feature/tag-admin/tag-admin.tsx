@@ -1,7 +1,7 @@
 'use client';
 
 import { memo, useState } from 'react';
-import { useSessionContext } from '@/context';
+import type { SessionUser } from '@/models';
 import { useCreateTag, useDeleteTag, useTags, useUpdateTag } from '@/queries';
 import { Page, Panel } from '@/ui';
 import styles from './tag-admin.module.css';
@@ -9,8 +9,12 @@ import { TagForm } from './tag-form';
 import { TagList } from './tag-list';
 
 /** Admin list and editor for tags. */
-const TagAdminComponent = function() {
-  const session = useSessionContext();
+const TagAdminComponent = function({
+  user,
+}: {
+  /** Person from the user cookie. Null when nobody is signed in. */
+  readonly user: SessionUser | null;
+}) {
   const tags = useTags();
   const createTag = useCreateTag();
   const updateTag = useUpdateTag();
@@ -19,7 +23,7 @@ const TagAdminComponent = function() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  if (session.user?.role !== 'ADMIN') {
+  if (user?.role !== 'ADMIN') {
     return (
       <Page>
         <Panel>

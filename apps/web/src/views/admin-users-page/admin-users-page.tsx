@@ -1,12 +1,9 @@
-'use client';
-
-import { memo } from 'react';
 import { UserAdmin } from '@/feature';
+import { getSessionUser } from '@/services/get-session-user';
 
 /** Account administration. */
-const AdminUsersPageComponent = function() {
-  return <UserAdmin />;
-}
+export async function AdminUsersPage() {
+  const user = await getSessionUser();
 
-AdminUsersPageComponent.displayName = 'AdminUsersPage';
-export const AdminUsersPage = memo(AdminUsersPageComponent);
+  return <UserAdmin user={user} />;
+}

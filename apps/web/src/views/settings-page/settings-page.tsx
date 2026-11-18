@@ -1,12 +1,9 @@
-'use client';
-
-import { memo } from 'react';
 import { Settings } from '@/feature';
+import { getSessionUser } from '@/services/get-session-user';
 
 /** Account details. */
-const SettingsPageComponent = function() {
-  return <Settings />;
-}
+export async function SettingsPage() {
+  const user = await getSessionUser();
 
-SettingsPageComponent.displayName = 'SettingsPage';
-export const SettingsPage = memo(SettingsPageComponent);
+  return <Settings user={user} />;
+}

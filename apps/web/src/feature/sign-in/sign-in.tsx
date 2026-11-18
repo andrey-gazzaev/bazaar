@@ -1,8 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { memo, useEffect, useState, type FormEvent } from 'react';
-import { useSessionContext } from '@/context';
+import { memo, useState, type FormEvent } from 'react';
 import { useSignIn } from '@/queries';
 import { Breadcrumb, Button, Page, Panel, TextField } from '@/ui';
 import styles from './sign-in.module.css';
@@ -10,15 +9,10 @@ import styles from './sign-in.module.css';
 /** Email and password form. */
 const SignInComponent = function() {
   const signIn = useSignIn();
-  const session = useSessionContext();
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (session.user) router.replace('/');
-  }, [session.user, router]);
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -33,13 +27,12 @@ const SignInComponent = function() {
 
     try {
       await signIn.mutateAsync({ email: nextEmail, password });
+      router.refresh();
       router.push('/');
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Не удалось войти');
     }
   }
-
-  if (session.user) return null;
 
   return (
     <Page className={styles.column}>

@@ -54,7 +54,7 @@ describe('Cart integration', () => {
   it('shows the total before the mock purchase and stores the delivery details', async () => {
     const user = userEvent.setup();
 
-    renderShop(<Cart />, shopper);
+    renderShop(<Cart user={shopper} />);
 
     expect(await screen.findByRole('heading', { name: 'Корзина' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Адрес доставки' })).toBeInTheDocument();
@@ -122,7 +122,7 @@ describe('Cart integration', () => {
       },
     ]);
 
-    renderShop(<Cart />, shopper);
+    renderShop(<Cart user={shopper} />);
 
     expect(await screen.findByText(/6\s980\s₽/)).toBeInTheDocument();
 

@@ -1,6 +1,5 @@
-import { cookies } from 'next/headers';
-import type { ReactNode } from 'react';
-import { readSessionUser } from '@/dtos/schemas/session/read-session-user';
+import { Suspense, type ReactNode } from 'react';
+import { AccountMenu, ProfileMenu } from '@/feature';
 import { Frame } from './frame';
 import { Providers } from './providers';
 import './global.css';
@@ -12,15 +11,25 @@ export const metadata = {
 };
 
 /** Root document. */
-export default async function RootLayout({ children }: { readonly children: ReactNode }) {
-  const jar = await cookies();
-  const user = readSessionUser(jar.get('bazaar_user')?.value ?? null);
-
+export default function RootLayout({ children }: { readonly children: ReactNode }) {
   return (
     <html lang="ru">
       <body>
-        <Providers user={user}>
-          <Frame>{children}</Frame>
+        <Providers>
+          <Frame
+            menu={(
+              <Suspense fallback={null}>
+                <AccountMenu />
+              </Suspense>
+            )}
+            profile={(
+              <Suspense fallback={null}>
+                <ProfileMenu />
+              </Suspense>
+            )}
+          >
+            {children}
+          </Frame>
         </Providers>
       </body>
     </html>

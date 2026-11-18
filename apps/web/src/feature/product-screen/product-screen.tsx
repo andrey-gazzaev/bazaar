@@ -2,8 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
-import { useSessionContext } from '@/context';
 import { useCart } from '@/hooks';
+import type { SessionUser } from '@/models';
 import { formatPrice, formatStock } from '@/services';
 import { useDeleteProduct, useProduct } from '@/queries';
 import { Breadcrumb, Button, Icon, Page, Panel, Pill, type Crumb } from '@/ui';
@@ -13,18 +13,23 @@ import { ProductGallery } from './product-gallery';
 /** One listing: its pictures, price, and the current person's actions. */
 const ProductScreenComponent = function({
   productId,
+  user,
 }: {
   /** Listing to show. */
   readonly productId: string;
+
+  /** Person from the user cookie. Null when nobody is signed in. */
+  readonly user: SessionUser | null;
 }) {
   const product = useProduct(productId);
-  const session = useSessionContext();
   const remove = useDeleteProduct();
-  const shop = useCart();
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);
   const [added, setAdded] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const shopper = user?.role === 'CLIENT' || user?.role === 'SELLER';
+  const shop = useCart(shopper);
 
   if (product.isLoading) return <Page><p className="muted">Загрузка…</p></Page>;
 
@@ -35,8 +40,7 @@ const ProductScreenComponent = function({
 
   const listing = product.data;
   const category = listing.tags[0];
-  const owns = session.user?.id === listing.sellerId;
-  const shopper = session.user?.role === 'CLIENT' || session.user?.role === 'SELLER';
+  const owns = user?.id === listing.sellerId;
   const canBuy = listing.status === 'APPROVED' && shopper && listing.stock > 0;
 
   const crumbs: readonly Crumb[] = [
@@ -123,7 +127,7 @@ const ProductScreenComponent = function({
 
                 {added ? <a href="/cart">Перейти в корзину</a> : null}
 
-                {!session.user && listing.stock > 0 ? <a href="/sign-in">Войдите, чтобы купить</a> : null}
+                {!user && listing.stock > 0 ? <a href="/sign-in">Войдите, чтобы купить</a> : null}
 
                 {owns && !confirming ? (
                   <Button variant="danger" onClick={() => setConfirming(true)}>
