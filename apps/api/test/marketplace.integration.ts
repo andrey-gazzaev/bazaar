@@ -23,7 +23,7 @@ describe('marketplace', () => {
   let prisma: PrismaClient;
 
   beforeAll(async () => {
-    execSync('docker compose up -d --wait', { cwd: repoRoot, stdio: 'inherit' });
+    execSync('docker compose up -d --wait postgres', { cwd: repoRoot, stdio: 'inherit' });
     await ensureTestDatabase();
     execSync('pnpm exec prisma db push --skip-generate --accept-data-loss', {
       cwd: apiRoot,
@@ -37,8 +37,8 @@ describe('marketplace', () => {
   });
 
   afterAll(async () => {
-    await app.close();
-    await prisma.$disconnect();
+    if (app) await app.close();
+    if (prisma) await prisma.$disconnect();
   });
 
   beforeEach(async () => {
