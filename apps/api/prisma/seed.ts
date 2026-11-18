@@ -1,6 +1,6 @@
 import { PrismaClient, ReviewStatus, Role } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 
 const prisma = new PrismaClient();
@@ -22,7 +22,6 @@ const products: readonly {
   description: string;
   price: number;
   tags: readonly TagName[];
-  color: string;
 }[] = [
   {
     id: 'seed-linen-shirt',
@@ -30,7 +29,6 @@ const products: readonly {
     description: 'Свободный крой из плотного льна, пуговицы из перламутра.',
     price: 3490,
     tags: ['Одежда'],
-    color: '#e7d7c1',
   },
   {
     id: 'seed-wool-sweater',
@@ -38,7 +36,6 @@ const products: readonly {
     description: 'Тёплый свитер с круглым воротом, шерсть мериноса.',
     price: 5900,
     tags: ['Одежда'],
-    color: '#cbb9a6',
   },
   {
     id: 'seed-cotton-trousers',
@@ -46,7 +43,6 @@ const products: readonly {
     description: 'Прямые брюки из плотного хлопка, пояс на пуговице.',
     price: 4200,
     tags: ['Одежда'],
-    color: '#d5ddd4',
   },
   {
     id: 'seed-leather-belt',
@@ -54,7 +50,6 @@ const products: readonly {
     description: 'Ремень из гладкой кожи, пряжка матового металла.',
     price: 1890,
     tags: ['Одежда'],
-    color: '#c4a484',
   },
   {
     id: 'seed-striped-dress',
@@ -62,7 +57,6 @@ const products: readonly {
     description: 'Летнее платье до колена, хлопок, тонкие полоски.',
     price: 6700,
     tags: ['Одежда'],
-    color: '#f2d6d3',
   },
   {
     id: 'seed-everyday-sneakers',
@@ -70,7 +64,6 @@ const products: readonly {
     description: 'Холщовый верх, резиновая подошва, шнуровка.',
     price: 5400,
     tags: ['Одежда'],
-    color: '#d9dde3',
   },
   {
     id: 'seed-cashmere-scarf',
@@ -78,7 +71,6 @@ const products: readonly {
     description: 'Длинный шарф, мягкий кашемир, без бахромы.',
     price: 3200,
     tags: ['Одежда'],
-    color: '#e4d5c7',
   },
   {
     id: 'seed-wireless-headphones',
@@ -86,7 +78,6 @@ const products: readonly {
     description: 'Накладные наушники, до 30 часов без подзарядки, складные.',
     price: 7990,
     tags: ['Электроника'],
-    color: '#d7e3ea',
   },
   {
     id: 'seed-usb-lamp',
@@ -94,7 +85,6 @@ const products: readonly {
     description: 'Настольная лампа с тёплым светом и разъёмом USB.',
     price: 2490,
     tags: ['Электроника', 'Дом'],
-    color: '#f3e6c4',
   },
   {
     id: 'seed-portable-speaker',
@@ -102,7 +92,6 @@ const products: readonly {
     description: 'Компактная колонка с защитой от брызг, играет до 12 часов.',
     price: 4590,
     tags: ['Электроника'],
-    color: '#d5e2d8',
   },
   {
     id: 'seed-charger-65w',
@@ -110,7 +99,6 @@ const products: readonly {
     description: 'Сетевое зарядное устройство с кабелем USB-C.',
     price: 1990,
     tags: ['Электроника'],
-    color: '#e6e2f2',
   },
   {
     id: 'seed-mechanical-keyboard',
@@ -118,7 +106,6 @@ const products: readonly {
     description: 'Компактная раскладка и переключатели с кликом.',
     price: 8900,
     tags: ['Электроника'],
-    color: '#e8e4df',
   },
   {
     id: 'seed-webcam',
@@ -126,7 +113,6 @@ const products: readonly {
     description: 'Камера 1080p с крышкой на объектив.',
     price: 3690,
     tags: ['Электроника'],
-    color: '#d9e4ef',
   },
   {
     id: 'seed-power-bank',
@@ -134,7 +120,6 @@ const products: readonly {
     description: 'Ёмкость 10 000 мА·ч, два порта USB.',
     price: 2790,
     tags: ['Электроника'],
-    color: '#efe3d4',
   },
   {
     id: 'seed-ceramic-mug',
@@ -142,7 +127,6 @@ const products: readonly {
     description: 'Объём 350 мл, глазурь, можно мыть в посудомойке.',
     price: 890,
     tags: ['Дом'],
-    color: '#f0d9c8',
   },
   {
     id: 'seed-bedding-set',
@@ -150,7 +134,6 @@ const products: readonly {
     description: 'Хлопковый комплект: простыня, пододеяльник и две наволочки.',
     price: 6400,
     tags: ['Дом'],
-    color: '#e7eef2',
   },
   {
     id: 'seed-towel-set',
@@ -158,7 +141,6 @@ const products: readonly {
     description: 'Два банных и два лицевых полотенца из хлопка.',
     price: 2100,
     tags: ['Дом'],
-    color: '#f6efe6',
   },
   {
     id: 'seed-glass-vase',
@@ -166,7 +148,6 @@ const products: readonly {
     description: 'Прозрачное стекло, высота 22 см.',
     price: 1750,
     tags: ['Дом'],
-    color: '#dce8e4',
   },
   {
     id: 'seed-wool-blanket',
@@ -174,7 +155,6 @@ const products: readonly {
     description: 'Плед 140×200 см из шерсти, без декора.',
     price: 4800,
     tags: ['Дом'],
-    color: '#e5d8cc',
   },
   {
     id: 'seed-cutting-board',
@@ -182,11 +162,10 @@ const products: readonly {
     description: 'Доска из дуба с желобком для сока.',
     price: 1290,
     tags: ['Дом'],
-    color: '#eadcc8',
   },
 ];
 
-/** Creates the demo accounts, tags, and listings. Existing rows are left as they are. */
+/** Creates the demo accounts, tags, and listings. Listing text that already exists stays. Seed photos are replaced. */
 async function main(): Promise<void> {
   for (const user of users) {
     const passwordHash = await bcrypt.hash(user.password, 10);
@@ -215,13 +194,13 @@ async function main(): Promise<void> {
   const savedTags = await prisma.tag.findMany({ where: { name: { in: [...tags] } } });
   const tagIdByName = new Map(savedTags.map((tag) => [tag.name, tag.id]));
   const directory = process.env.UPLOAD_DIR || join(process.cwd(), 'uploads');
+  const photoDirectory = join(process.cwd(), 'prisma', 'seed-photos');
 
   await mkdir(directory, { recursive: true });
 
   for (const [index, product] of products.entries()) {
-    const filename = `${product.id}.svg`;
+    const photos = await copySeedPhotos(photoDirectory, directory, product.id);
 
-    await writeFile(join(directory, filename), coverSvg(product.color));
     await prisma.product.upsert({
       where: { id: product.id },
       update: {},
@@ -234,15 +213,35 @@ async function main(): Promise<void> {
         stock: 5,
         status: ReviewStatus.APPROVED,
         createdAt: new Date(Date.UTC(2026, 10, 16, 12, 0, products.length - index)),
-        images: { create: [{ url: `/uploads/${filename}`, sort: 0 }] },
         tags: { create: product.tags.map((name) => ({ tagId: requiredTagId(tagIdByName, name) })) },
       },
+    });
+
+    await prisma.productImage.deleteMany({ where: { productId: product.id } });
+    await prisma.productImage.createMany({
+      data: photos.map((filename, sort) => ({
+        productId: product.id,
+        url: `/uploads/${filename}`,
+        sort,
+      })),
     });
   }
 }
 
-function coverSvg(color: string): string {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800"><rect width="800" height="800" fill="#f4efe8"/><rect x="96" y="96" width="608" height="608" rx="28" fill="${color}"/></svg>`;
+async function copySeedPhotos(
+  sourceDirectory: string,
+  uploadDirectory: string,
+  productId: string,
+): Promise<readonly string[]> {
+  const filenames = [1, 2, 3].map((index) => `${productId}-${index}.jpg`);
+
+  for (const filename of filenames) {
+    await copyFile(join(sourceDirectory, filename), join(uploadDirectory, filename));
+  }
+
+  await rm(join(uploadDirectory, `${productId}.svg`), { force: true });
+
+  return filenames;
 }
 
 function requiredTagId(tagIdByName: ReadonlyMap<string, string>, name: string): string {
