@@ -1,75 +1,55 @@
-import { memo } from 'react';
-import type { CatalogSort } from '@/models';
+'use client';
+
+import type { CatalogQuery, CatalogSort } from '@/models';
+import { useCatalog } from '@/hooks';
+import { useTags } from '@/queries';
 import { formatPrice } from '@/services';
 import { Chip, Icon, Panel, SelectField, Slider, TextField } from '@/ui';
 import styles from './catalog-filters.module.css';
+import { useCatalogAddress } from './use-catalog-address';
 
 /** Search, tag chips, sort, and the price ceiling. */
-const CatalogFiltersComponent = function({
-  query,
-  onQuery,
-  tags,
-  tag,
-  onTag,
-  sort,
-  onSort,
-  max,
-  price,
-  onPrice,
-}: {
-  /** Text matched against listing names. Empty matches every name. */
-  readonly query: string;
+export function CatalogFilters() {
+  const { query, replace } = useCatalogAddress();
+  const { ceiling, isLoading, error } = useCatalog(query);
+  const tags = useTags();
 
-  /** Stores the next search text. */
-  readonly onQuery: (query: string) => void;
+  if (isLoading || tags.isLoading || error) return null;
 
-  /** Tag names offered as chips. Empty when the shop has no tags. */
-  readonly tags: readonly string[];
+  const names = (tags.data ?? []).map((tag) => tag.name);
+  const price = query.maxPrice ?? ceiling;
 
-  /** Selected tag. Empty when every tag is included. */
-  readonly tag: string;
+  function filter(patch: Partial<Omit<CatalogQuery, 'page'>>) {
+    replace({ ...query, ...patch, page: 1 });
+  }
 
-  /** Stores the next tag. Empty clears the selection. */
-  readonly onTag: (tag: string) => void;
-
-  /** Current sort. */
-  readonly sort: CatalogSort;
-
-  /** Stores the next sort. */
-  readonly onSort: (sort: CatalogSort) => void;
-
-  /** Highest approved price, in whole rubles. Zero when the catalog is empty. */
-  readonly max: number;
-
-  /** Ceiling shown on the slider, in whole rubles. */
-  readonly price: number;
-
-  /** Stores the next ceiling. */
-  readonly onPrice: (price: number) => void;
-}) {
   return (
     <Panel className={styles.panel}>
       <h2 className={styles.title}>Фильтры</h2>
 
       <TextField
-        value={query}
+        value={query.q}
         placeholder="Найти вещь"
-        onChange={(event) => onQuery(event.currentTarget.value)}
+        onChange={(event) => filter({ q: event.currentTarget.value })}
         adornment={<Icon name="search" />}
       />
 
       <div className={styles.chips}>
-        <Chip selected={tag === ''} onClick={() => onTag('')}>
+        <Chip selected={query.tag === ''} onClick={() => filter({ tag: '' })}>
           Всё
         </Chip>
-        {tags.map((name) => (
-          <Chip key={name} selected={tag === name} onClick={() => onTag(name)}>
+        {names.map((name) => (
+          <Chip key={name} selected={query.tag === name} onClick={() => filter({ tag: name })}>
             {name}
           </Chip>
         ))}
       </div>
 
-      <SelectField label="Сортировка" value={sort} onChange={(event) => onSort(event.target.value as CatalogSort)}>
+      <SelectField
+        label="Сортировка"
+        value={query.sort}
+        onChange={(event) => filter({ sort: event.target.value as CatalogSort })}
+      >
         <option value="newest">Сначала новые</option>
         <option value="price_asc">Сначала дешевле</option>
         <option value="price_desc">Сначала дороже</option>
@@ -79,14 +59,11 @@ const CatalogFiltersComponent = function({
       <Slider
         label="Цена до"
         min={0}
-        max={max}
+        max={ceiling}
         value={price}
         valueLabel={formatPrice(price)}
-        onChange={onPrice}
+        onChange={(maxPrice) => filter({ maxPrice })}
       />
     </Panel>
   );
 }
-
-CatalogFiltersComponent.displayName = 'CatalogFilters';
-export const CatalogFilters = memo(CatalogFiltersComponent);

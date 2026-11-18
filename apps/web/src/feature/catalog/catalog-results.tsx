@@ -1,37 +1,32 @@
-import { memo } from 'react';
+'use client';
+
+import { useCatalog } from '@/hooks';
 import { Panel } from '@/ui';
-import type { ProductCardVm } from '@/view-models';
 import { CatalogPager } from './catalog-pager';
 import styles from './catalog-results.module.css';
 import { ProductCard } from './product-card';
+import { useCatalogAddress } from './use-catalog-address';
 
 /** Heading, count, cards, and the pager. */
-const CatalogResultsComponent = function({
-  cards,
-  total,
-  page,
-  pageCount,
-  catalogEmpty,
-  onPage,
-}: {
-  /** Cards on this page. Empty when none matched. */
-  readonly cards: readonly ProductCardVm[];
+export function CatalogResults() {
+  const { query, replace } = useCatalogAddress();
+  const { cards, page, pageCount, total, isLoading, error } = useCatalog(query);
 
-  /** How many listings match the filter. */
-  readonly total: number;
+  if (isLoading) return <p className="muted">Загрузка…</p>;
 
-  /** Current page, starting at 1. */
-  readonly page: number;
+  if (error) {
+    const message = error instanceof Error ? error.message : 'Не удалось загрузить товары';
 
-  /** How many pages match. Zero when nothing matches. */
-  readonly pageCount: number;
+    return <p className="status">{message}</p>;
+  }
 
-  /** True when the shop has no listings at all. */
-  readonly catalogEmpty: boolean;
+  const filtered = query.q !== '' || query.tag !== '' || query.maxPrice !== null;
+  const catalogEmpty = total === 0 && !filtered;
 
-  /** Stores the next page. */
-  readonly onPage: (page: number) => void;
-}) {
+  function onPage(next: number) {
+    replace({ ...query, page: next });
+  }
+
   return (
     <Panel className={styles.panel}>
       <div className={styles.head}>
@@ -55,6 +50,3 @@ const CatalogResultsComponent = function({
     </Panel>
   );
 }
-
-CatalogResultsComponent.displayName = 'CatalogResults';
-export const CatalogResults = memo(CatalogResultsComponent);
