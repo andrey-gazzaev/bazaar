@@ -3,12 +3,13 @@ import { getSessionUser } from '@/services/get-session-user';
 
 /** One listing. */
 export async function ProductPage({
-  productId,
+  params,
 }: {
-  /** Listing to show. */
-  readonly productId: string;
+  /** Listing id from the route. */
+  readonly params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const user = await getSessionUser();
 
-  return <ProductScreen productId={productId} user={user} />;
+  return <ProductScreen productId={id} user={user} />;
 }

@@ -1,12 +1,9 @@
-'use client';
-
-import { usePathname } from 'next/navigation';
-import { memo, type ReactNode } from 'react';
-import { Center, Shell, Sidebar } from '@/ui';
+import type { ReactNode } from 'react';
+import { Shell, Sidebar } from '@/ui';
 import styles from './frame.module.css';
 
-/** Shop chrome. Sign-in and registration are centered, without the sidebar. */
-const FrameComponent = function({
+/** Shop chrome: the sidebar and the page column. */
+export function Frame({
   menu,
   profile,
   children,
@@ -20,11 +17,6 @@ const FrameComponent = function({
   /** Page content. */
   readonly children: ReactNode;
 }) {
-  const pathname = usePathname();
-  const authPage = pathname === '/sign-in' || pathname === '/sign-up';
-
-  if (authPage) return <Center>{children}</Center>;
-
   return (
     <Shell>
       <Sidebar brand={<a href="/">Базар</a>}>
@@ -37,7 +29,4 @@ const FrameComponent = function({
       </div>
     </Shell>
   );
-};
-
-FrameComponent.displayName = 'Frame';
-export const Frame = memo(FrameComponent);
+}
