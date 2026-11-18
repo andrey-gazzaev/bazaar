@@ -9,6 +9,7 @@ import { Prisma, ReviewStatus, Role } from '@prisma/client';
 import { unlink } from 'node:fs/promises';
 import type { PublicUser } from '../common/public-user';
 import { rethrowPrisma } from '../common/prisma-error';
+import { PendingMail } from '../pending-mail/pending-mail';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ListProductsQuery, ProductSort } from './dto/list-products.query';
@@ -36,8 +37,11 @@ type TakenProduct = {
 /** Catalog of listings. */
 @Injectable()
 export class ProductsService {
-  /** Reads listings and the pictures saved for them. */
-  public constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
+  /** Reads listings and tells admins when one is newly pending. */
+  public constructor(
+    @Inject(PrismaService) private readonly prisma: PrismaService,
+    @Inject(PendingMail) private readonly pendingMail: PendingMail,
+  ) {}
 
   /** One page of approved listings. Stock of zero stays included. */
   public async list(query: ListProductsQuery): Promise<ProductPageDto> {
@@ -132,6 +136,12 @@ export class ProductsService {
         include: productInclude,
       });
 
+      await this.pendingMail.publish({
+        productId: product.id,
+        name: product.name,
+        sellerId: product.sellerId,
+      });
+
       return this.toProduct(product);
     } catch (error) {
       await this.removeFiles(files);
@@ -167,7 +177,8 @@ export class ProductsService {
 
     await this.assertTags(tagIds, files);
 
-    const status = current.status === ReviewStatus.REJECTED ? ReviewStatus.PENDING : current.status;
+    const wasRejected = current.status === ReviewStatus.REJECTED;
+    const status = wasRejected ? ReviewStatus.PENDING : current.status;
 
     try {
       const product = await this.prisma.product.update({
@@ -193,6 +204,14 @@ export class ProductsService {
         },
         include: productInclude,
       });
+
+      if (wasRejected) {
+        await this.pendingMail.publish({
+          productId: product.id,
+          name: product.name,
+          sellerId: product.sellerId,
+        });
+      }
 
       if (files.length > 0) {
         await this.removeFiles(current.images.map((image) => ({ path: this.pathFor(image.url) })));
