@@ -3,6 +3,7 @@
 import { memo, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 import type { SessionUser } from '@/models';
+import { useModeration } from '@/queries';
 import { Icon, NavItem } from '@/ui';
 import styles from './account-menu.module.css';
 
@@ -18,12 +19,25 @@ const AccountMenuNavComponent = function({
   readonly user: SessionUser | null;
 }) {
   const pathname = usePathname();
+  const admin = user?.role === 'ADMIN';
+
+  const moderation = useModeration({ enabled: admin, live: admin });
 
   const catalog = useMemo(() => (
     <NavItem href="/" selected={catalogSelected(pathname)} icon={<Icon name="grid" />}>
       Каталог
     </NavItem>
   ), [pathname]);
+
+  const pendingCount = moderation.data?.count ?? 0;
+
+  const moderationLabel = pendingCount > 0 ? (
+    <>
+      Модерация<span className={styles.count}>{pendingCount}</span>
+    </>
+  ) : (
+    'Модерация'
+  );
 
   if (!user) {
     return (
@@ -43,7 +57,6 @@ const AccountMenuNavComponent = function({
   }
 
   const seller = user.role === 'SELLER';
-  const admin = user.role === 'ADMIN';
   const shopper = user.role !== 'ADMIN';
 
   return (
@@ -76,7 +89,7 @@ const AccountMenuNavComponent = function({
 
       {admin ? (
         <NavItem href="/admin/moderation" selected={pathname === '/admin/moderation'} icon={<Icon name="shield" />}>
-          Модерация
+          {moderationLabel}
         </NavItem>
       ) : null}
     </div>
