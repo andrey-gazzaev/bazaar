@@ -24,7 +24,7 @@ const NavItemComponent = function({
   return (
     <a href={href} className={clsx(styles.item, selected && styles.selected)}>
       {icon}
-      {children}
+      <span className={styles.label}>{children}</span>
     </a>
   );
 }

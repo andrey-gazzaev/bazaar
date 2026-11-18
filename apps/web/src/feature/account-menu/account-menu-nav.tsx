@@ -34,7 +34,7 @@ const AccountMenuNavComponent = function({
           <NavItem href="/sign-in" selected={pathname === '/sign-in'} icon={<Icon name="key" />}>
             Войти
           </NavItem>
-          <NavItem href="/sign-up" selected={pathname === '/sign-up'}>
+          <NavItem href="/sign-up" selected={pathname === '/sign-up'} icon={<Icon name="user" />}>
             Регистрация
           </NavItem>
         </div>
@@ -51,7 +51,7 @@ const AccountMenuNavComponent = function({
       {catalog}
 
       {shopper ? (
-        <NavItem href="/cart" selected={pathname === '/cart'}>
+        <NavItem href="/cart" selected={pathname === '/cart'} icon={<Icon name="cart" />}>
           Корзина
         </NavItem>
       ) : null}
@@ -63,7 +63,7 @@ const AccountMenuNavComponent = function({
       ) : null}
 
       {admin ? (
-        <NavItem href="/admin/users" selected={pathname === '/admin/users'}>
+        <NavItem href="/admin/users" selected={pathname === '/admin/users'} icon={<Icon name="users" />}>
           Пользователи
         </NavItem>
       ) : null}
@@ -75,7 +75,7 @@ const AccountMenuNavComponent = function({
       ) : null}
 
       {admin ? (
-        <NavItem href="/admin/moderation" selected={pathname === '/admin/moderation'}>
+        <NavItem href="/admin/moderation" selected={pathname === '/admin/moderation'} icon={<Icon name="shield" />}>
           Модерация
         </NavItem>
       ) : null}

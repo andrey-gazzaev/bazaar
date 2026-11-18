@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Shell, Sidebar } from '@/ui';
+import { Icon, Shell, Sidebar } from '@/ui';
 import styles from './frame.module.css';
 
 /** Shop chrome: the sidebar and the page column. */
@@ -19,7 +19,16 @@ export function Frame({
 }) {
   return (
     <Shell>
-      <Sidebar brand={<a href="/">Базар</a>}>
+      <Sidebar
+        brand={(
+          <a href="/" className={styles.logo}>
+            <span className={styles.mark}>
+              <Icon name="shop" />
+            </span>
+            <span className={styles.word}>Базар</span>
+          </a>
+        )}
+      >
         {menu}
       </Sidebar>
 
