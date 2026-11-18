@@ -7,17 +7,20 @@ import { formatPrice } from '@/services';
 import { Chip, Icon, Panel, SelectField, Slider, TextField } from '@/ui';
 import styles from './catalog-filters.module.css';
 import { useCatalogAddress } from './use-catalog-address';
+import { useDelayedPrice } from './use-delayed-price';
 
 /** Search, tag chips, sort, and the price ceiling. */
 export function CatalogFilters() {
   const { query, replace } = useCatalogAddress();
   const { ceiling, isLoading, error } = useCatalog(query);
   const tags = useTags();
+  const { price, change } = useDelayedPrice(query.maxPrice ?? ceiling, (maxPrice) => {
+    replace({ ...query, maxPrice, page: 1 });
+  });
 
   if (isLoading || tags.isLoading || error) return null;
 
   const names = (tags.data ?? []).map((tag) => tag.name);
-  const price = query.maxPrice ?? ceiling;
 
   function filter(patch: Partial<Omit<CatalogQuery, 'page'>>) {
     replace({ ...query, ...patch, page: 1 });
@@ -62,7 +65,7 @@ export function CatalogFilters() {
         max={ceiling}
         value={price}
         valueLabel={formatPrice(price)}
-        onChange={(maxPrice) => filter({ maxPrice })}
+        onChange={change}
       />
     </Panel>
   );
