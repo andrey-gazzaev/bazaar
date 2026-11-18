@@ -1,8 +1,10 @@
-import type { CatalogPage, CatalogQuery, NewProduct, Product, ProductPatch } from '@/models';
+import type { CatalogPage, CatalogQuery, ModerationQueue, NewProduct, Product, ProductPatch } from '@/models';
 import { api } from '../../http';
 import { mapCatalogPage } from '../../mappers/product/map-catalog-page';
+import { mapModerationQueue } from '../../mappers/product/map-moderation-queue';
 import { mapProduct } from '../../mappers/product/map-product';
 import { catalogPageSchema } from '../../schemas/product/product-list.schema';
+import { moderationQueueSchema } from '../../schemas/product/moderation-queue.schema';
 import { productResponseSchema } from '../../schemas/product/product-response.schema';
 import { productRowsSchema } from '../../schemas/product/product-rows.schema';
 
@@ -38,11 +40,11 @@ export class ProductApi {
     return productRowsSchema.parse(data).products.map(mapProduct);
   }
 
-  /** Listings waiting for an admin. */
-  public async moderation(): Promise<readonly Product[]> {
+  /** Listings waiting for an admin, and how many there are. */
+  public async moderation(): Promise<ModerationQueue> {
     const { data } = await api.get('/api/products/moderation');
 
-    return productRowsSchema.parse(data).products.map(mapProduct);
+    return mapModerationQueue(moderationQueueSchema.parse(data));
   }
 
   /** Publishes a pending listing with its pictures. */

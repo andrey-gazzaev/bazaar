@@ -8,11 +8,11 @@ export function useModerationQueue(): {
   readonly isLoading: boolean;
   readonly error: Error | null;
 } {
-  const products = useModeration();
+  const moderation = useModeration({ enabled: true, live: false });
 
   return {
-    items: (products.data ?? []).map(mapModerationItem),
-    isLoading: products.isLoading,
-    error: products.error,
+    items: (moderation.data?.products ?? []).map(mapModerationItem),
+    isLoading: moderation.isLoading,
+    error: moderation.error,
   };
 }
