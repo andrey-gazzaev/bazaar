@@ -51,3 +51,12 @@ export type ProductPageDto = {
   /** Highest approved price in whole rubles, ignoring the filter. Zero when none exist. */
   readonly ceiling: number;
 };
+
+/** Listings waiting for an admin, and how many there are. */
+export type ModerationQueueDto = {
+  /** Pending listings, newest first. Empty when nothing is waiting. */
+  readonly products: readonly ProductDto[];
+
+  /** How many listings are waiting. Zero when the queue is empty. */
+  readonly count: number;
+};

@@ -26,7 +26,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { ListProductsQuery } from './dto/list-products.query';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { imageUpload } from './image-upload';
-import { ProductDto, ProductPageDto } from './product.dto';
+import { ModerationQueueDto, ProductDto, ProductPageDto } from './product.dto';
 import { ProductsService } from './products.service';
 
 /** Public catalog, a seller's own listings, and the admin queue. */
@@ -49,12 +49,12 @@ export class ProductsController {
     return { products: await this.products.mine(user) };
   }
 
-  /** Listings waiting for an admin. */
+  /** Listings waiting for an admin, and how many there are. */
   @Get('moderation')
   @Roles(Role.ADMIN)
   @UseGuards(AuthGuard, RolesGuard)
-  public async moderation(): Promise<{ products: readonly ProductDto[] }> {
-    return { products: await this.products.moderation() };
+  public async moderation(): Promise<ModerationQueueDto> {
+    return this.products.moderation();
   }
 
   /** One listing. A hidden card is returned only to its seller or an admin. */

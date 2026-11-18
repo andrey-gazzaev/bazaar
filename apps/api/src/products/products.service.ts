@@ -14,7 +14,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ListProductsQuery, ProductSort } from './dto/list-products.query';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ProductDto, ProductPageDto } from './product.dto';
+import { ModerationQueueDto, ProductDto, ProductPageDto } from './product.dto';
 
 const allowedTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
 const pageSize = 12;
@@ -94,15 +94,17 @@ export class ProductsService {
     return products.map((product) => this.toProduct(product));
   }
 
-  /** Listings waiting for an admin. */
-  public async moderation(): Promise<readonly ProductDto[]> {
+  /** Listings waiting for an admin, and how many there are. */
+  public async moderation(): Promise<ModerationQueueDto> {
     const products = await this.prisma.product.findMany({
       where: { status: ReviewStatus.PENDING },
       include: productInclude,
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
     });
 
-    return products.map((product) => this.toProduct(product));
+    const pending = products.map((product) => this.toProduct(product));
+
+    return { products: pending, count: pending.length };
   }
 
   /** Stores a listing for the signed-in seller and leaves it pending. */
